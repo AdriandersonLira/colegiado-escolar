@@ -33,6 +33,7 @@ public class Processo {
     @ManyToOne
     @JoinColumn(name = "aluno_id", referencedColumnName = "id")
     private Aluno aluno;
+    //lembrar de fazer a relacao na criacao da reuniao. colocar a reuniao no processo
     @ManyToOne
     private Reuniao reuniao;
     @ManyToOne(cascade = CascadeType.ALL)
@@ -64,6 +65,8 @@ public class Processo {
 
     public String toString() {
         return "ID: " + id + "\n" +
-                "Data: " + dataRecepcao;
+                "Data: " + dataRecepcao + "\n" +
+                "Requerimento: " + requerimento;
+
     }
 }

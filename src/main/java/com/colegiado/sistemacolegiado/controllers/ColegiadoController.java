@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -116,6 +117,32 @@ public class ColegiadoController {
         }
 
         return modelAndView;
+    }
+
+    @PostMapping("/atribuir")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView atribuirProfessorNoColegiado(@RequestParam Integer idProfessor,
+                                         @RequestParam Integer idColegiado, ModelAndView modelAndView, BindingResult bindingResult, RedirectAttributes attr){
+
+        //new ProcessoDTO(processoService.atribuirProcesso(idProcesso, idProfessor));
+        //modelAndView.setViewName("redirect:/professores");
+
+        ModelAndView mv = new ModelAndView("redirect:/professores");
+
+
+        try {
+            colegiadoService.adicionarProfessor(idColegiado, idProfessor);
+            attr.addFlashAttribute("message", "OK: Colegiado atribuído com sucesso!");
+            attr.addFlashAttribute("error", "false");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            attr.addFlashAttribute("message", "Error: " + e.getMessage());
+            attr.addFlashAttribute("error", "true");
+        }
+
+
+        return mv;
     }
 
 //    @PostMapping

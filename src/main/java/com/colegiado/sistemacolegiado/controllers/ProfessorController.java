@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,7 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-@RestController
+@Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/professores")
 @AllArgsConstructor
@@ -93,12 +94,13 @@ public class ProfessorController {
         return modelAndView;
     }
 
-    @GetMapping("/{id}/atribuirprocesso")
+    @GetMapping("/{id}/atribuir")
     public ModelAndView atribuirprocesso(@PathVariable int id, ModelAndView modelAndView, RedirectAttributes attr) {
         try {
             Professor professor = professorService.encontrarPorId(id);
             List<Professor> professores = professorService.listarProfessores();
             List<Processo> processos = processoService.listarProcessos();
+            List<Colegiado> colegiados = colegiadoService.listarColegiado();
 
             var request = new ProfessorDTO(professor);
 
@@ -107,6 +109,8 @@ public class ProfessorController {
             modelAndView.addObject("professor", request);
             modelAndView.addObject("professores", professores);
             modelAndView.addObject("processos", processos);
+            modelAndView.addObject("colegiados", colegiados);
+            modelAndView.addObject("professorNome", professor.getNome());
 
         } catch (Exception e) {
             attr.addFlashAttribute("message", "Error: "+e);

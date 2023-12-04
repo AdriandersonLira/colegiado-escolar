@@ -8,8 +8,8 @@
   <form th:object="${assunto}" th:action="${'/assuntos/' + assuntoId}" method="POST">
     <div class="mb-3">
       <label class="form-label">Nome</label>
-      <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{nome}">
-      <div class="invalid-feedback" th:errors="*{nome}"></div>
+      <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{assunto}">
+      <div class="invalid-feedback" th:errors="*{assunto}"></div>
     </div>
 
     <button class="btn btn-primary" type="submit">Enviar</button>

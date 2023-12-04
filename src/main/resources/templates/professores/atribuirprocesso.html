@@ -2,32 +2,82 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layouts :: head('Atribuir Processo')}"></head>
 <body>
-<header th:replace="~{layouts :: header('Atribuir processo professor/coordenador #' + ${professorId})}"></header>
+<header th:replace="~{layouts :: header('ID: #' + ${professorId})}"></header>
 
 <div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">
+                Professor:
+                <span th:text="${professorNome}"></span>
+            </h2>
+        </div>
+    </div>
+
+    <h1>Atribuir Professor a um colegiado</h1>
+    <!-- Formulário para Atribuir Colegiado -->
+    <form th:object="${professor}" th:action="@{'/colegiados/atribuir'}" method="POST">
+        <div class="mb-3">
+            <label for="professorColegiado" class="form-label">Professores</label>
+            <select class="form-select" id="professorColegiado" name="idProfessor" required>
+                <option th:each="professor : ${professores}" th:value="${professor.getId()}" th:text="${professor.nome}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="colegiado" class="form-label">Colegiado</label>
+            <select class="form-select" id="colegiado" name="idColegiado" required>
+                <option th:each="colegiado : ${colegiados}" th:value="${colegiado.getId()}" th:text="${colegiado.curso}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Atribuir Colegiado</button>
+        </div>
+    </form>
+
+    <hr class="mb-3"> <!-- Linha divisória entre os formulários -->
+
+    <!-- Formulário para Atribuir Processo -->
+    <h1>Atribuir Professor a um processo</h1>
     <form th:object="${professor}" th:action="@{'/processos/atribuir'}" method="POST">
-        <div class="col-md-3">
-            <label for="validationCustom04" class="form-label">Professores</label>
-            <select class="form-select" id="validationCustom04" name="idProfessor" required>
-                <option th:each="professor : ${professores}"
-                        th:value="${professor.getId()}" th:text="${professor.nome}"></option>
+        <div class="mb-3">
+            <label for="professorProcesso" class="form-label">Professores</label>
+            <select class="form-select" id="professorProcesso" name="idProfessor" required>
+                <option th:each="professor : ${professores}" th:value="${professor.getId()}" th:text="${professor.nome}"></option>
             </select>
-            <div class="invalid-feedback">
-                Please select a valid state.
-            </div>
         </div>
-        <div class="col-md-3">
-            <label for="validationCustom05" class="form-label">Processo</label>
-            <select class="form-select" id="validationCustom05" name="idProcesso" required>
-                <option th:each="processo : ${processos}"
-                        th:value="${processo.getId()}" th:text="${processo.requerimento}"></option>
+        <div class="mb-3">
+            <label for="processo" class="form-label">Processo</label>
+            <select class="form-select" id="processo" name="idProcesso" required>
+                <option th:each="processo : ${processos}" th:value="${processo.getId()}" th:text="${processo.requerimento}"></option>
             </select>
-            <div class="invalid-feedback">
-                Please select a valid state.
-            </div>
         </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Sign in</button>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Atribuir Processo</button>
+        </div>
+    </form>
+
+    <hr class="mb-3">
+
+    <h1>Criar Reunião</h1>
+    <!-- Criar reunião -->
+    <form th:action="@{'/reunioes/criar'}" method="POST">
+        <div class="mb-3">
+            <label for="colegiadoReuniao" class="form-label">Colegiado</label>
+            <select class="form-select" id="colegiadoReuniao" name="idColegiadoReuniao" required>
+                <option th:each="colegiado : ${colegiados}" th:value="${colegiado.getId()}" th:text="${colegiado.curso}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="processoReuniao" class="form-label">Processo</label>
+            <select class="form-select" id="processoReuniao" name="idProcessoReuniao" multiple required>
+                <option th:each="processo : ${processos}" th:value="${processo.getId()}" th:text="${processo.requerimento}"></option>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Atribuir Colegiado</button>
         </div>
     </form>
 </div>
