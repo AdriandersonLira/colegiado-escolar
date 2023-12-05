@@ -21,6 +21,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">Data</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Colegiado</th>
                     <th scope="col">Requerimento</th>
 
                     <!-- Adicione mais colunas conforme necessário -->
@@ -32,7 +33,7 @@
                     <td class="col-3" th:text="${#temporals.format(reuniao.dataReuniao, 'dd/MM/yyyy')}">Data</td>
                     <td class="col-3" th:text="${reuniao.status}">Status</td>
                     <td class="col-3" th:text="${reuniao.colegiado.curso}">Status</td>
-                    <td class="col-3"> <span th:each="processo : ${reuniao.processos}" th:text="${processo.aluno.nome}"></span></td>
+                    <td class="col-3"> <span th:each="processo : ${reuniao.processos}" th:text="${processo.requerimento}"></span></td>
 
                     <!-- Adicione mais colunas conforme necessário -->
                 </tr>

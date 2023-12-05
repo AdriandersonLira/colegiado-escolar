@@ -6,6 +6,7 @@ import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ProcessoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ReuniaoRepositorio;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,16 @@ public class ReuniaoService {
     final ProcessoRepositorio processoRepositorio;
 
 
-    public Reuniao criarReuniao(Reuniao reuniao){
+    @Transactional
+    public Reuniao criarReuniao(Reuniao reuniao, List<Processo> processos){
+        for (Processo Tprocesso : processos){
+            Tprocesso.setReuniao(reuniao);
+        }
+
+        for (Processo processo : processos) {
+            this.processoRepositorio.save(processo);
+        }
+
         return this.reuniaoRepositorio.save(reuniao);
     }
 

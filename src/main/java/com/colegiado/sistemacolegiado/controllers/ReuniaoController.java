@@ -65,7 +65,7 @@ public class ReuniaoController {
 
         try {
             Reuniao reuniao = new Reuniao(colegiado, processos, StatusReuniao.PROGRAMADA);
-            reuniaoService.criarReuniao(reuniao);
+            reuniaoService.criarReuniao(reuniao, processos);
             attr.addFlashAttribute("message", "Reunião criada com sucesso!");
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -78,6 +78,11 @@ public class ReuniaoController {
     @GetMapping
     public ModelAndView listaReunioes(ModelAndView modelAndView) {
         List<Reuniao> reunioes = reuniaoService.listarReunioes();
+        for (Reuniao reuniao : reunioes) {
+            System.out.println(reuniao.toString());
+            System.out.println(); // Adiciona uma linha em branco entre as reuniões
+        }
+
         modelAndView.addObject("reunioes", reunioes);
         modelAndView.setViewName("reunioes/index");
         return modelAndView;
