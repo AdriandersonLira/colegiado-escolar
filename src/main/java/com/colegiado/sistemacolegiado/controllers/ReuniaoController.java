@@ -1,12 +1,14 @@
 package com.colegiado.sistemacolegiado.controllers;
 
-import com.colegiado.sistemacolegiado.models.Colegiado;
-import com.colegiado.sistemacolegiado.models.Processo;
-import com.colegiado.sistemacolegiado.models.Reuniao;
+import com.colegiado.sistemacolegiado.models.*;
+import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.services.ColegiadoService;
 import com.colegiado.sistemacolegiado.services.ProcessoService;
+import com.colegiado.sistemacolegiado.services.ProfessorService;
 import com.colegiado.sistemacolegiado.services.ReuniaoService;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,9 +26,10 @@ public class ReuniaoController {
     ReuniaoService reuniaoService;
     @Autowired
     ProcessoService processoService;
-
     @Autowired
     ColegiadoService colegiadoService;
+    @Autowired
+    ProfessorService professorService;
 
     @PostMapping("/criar")
     public ModelAndView criarReuniao(
@@ -86,5 +89,39 @@ public class ReuniaoController {
         modelAndView.addObject("reunioes", reunioes);
         modelAndView.setViewName("reunioes/index");
         return modelAndView;
+    }
+
+    @GetMapping ("/{id}/listreuniaocolegiado")
+    public ModelAndView listaReunioesDoColegiado(@PathVariable int id, ModelAndView modelAndView){
+
+        Professor professor = professorService.encontrarPorId(id);
+
+        List<Reuniao> reunioes = reuniaoService.reunioesdocolegiado(professor.getColegiado().getId());
+
+
+        modelAndView.addObject("reunioescolegiado", reunioes);
+        modelAndView.addObject("statusReuniao", StatusReuniao.values());
+        modelAndView.addObject("professor", professor);
+        modelAndView.setViewName("reunioes/listarreunioescolegiado");
+
+        return modelAndView;
+
+    }
+
+    @GetMapping("/filtrar/{id}")
+    public ModelAndView filtrar (@PathVariable Integer id, @RequestParam (name = "statusFilter", required = false) StatusReuniao status) {
+
+        ModelAndView mv = new ModelAndView("reunioes/listarreunioescolegiado");
+        System.out.println(status);
+        Professor professor = professorService.encontrarPorId(id);
+        int idcolegiado = professor.getColegiado().getId();
+        System.out.println("oiiiiii");
+        List<Reuniao> reunioesfiltradas = reuniaoService.filtrarreuniao(status, idcolegiado);
+
+        mv.addObject("reunioescolegiado", reunioesfiltradas);
+        mv.addObject("statusReuniao", StatusReuniao.values());
+        mv.addObject("professor", professor);
+        return mv;
+
     }
 }

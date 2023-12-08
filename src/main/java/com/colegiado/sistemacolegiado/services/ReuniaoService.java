@@ -1,14 +1,18 @@
 package com.colegiado.sistemacolegiado.services;
 
+import com.colegiado.sistemacolegiado.models.Aluno;
 import com.colegiado.sistemacolegiado.models.Processo;
 import com.colegiado.sistemacolegiado.models.Reuniao;
 import com.colegiado.sistemacolegiado.models.Colegiado;
+import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
+import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ProcessoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ReuniaoRepositorio;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +91,18 @@ public class ReuniaoService {
         }
     }
 
+    public List<Reuniao> reunioesdocolegiado (int idColegiado){
+        return reuniaoRepositorio.listareuniaocolegiado(idColegiado);
+    }
 
+    public List<Reuniao> filtrarreuniao (StatusReuniao status, int idcolegiado){
+        System.out.println(status);
 
+       if (status == null) {
+           return reunioesdocolegiado(idcolegiado);
+       }
+
+       return reuniaoRepositorio.filtrarStatus(status, idcolegiado);
+    }
 
 }
