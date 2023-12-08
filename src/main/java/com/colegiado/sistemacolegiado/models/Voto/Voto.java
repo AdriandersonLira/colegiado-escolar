@@ -30,6 +30,14 @@ public class Voto {
     @JoinColumn(name= "id_processo")
     private Processo processo;
     private TipoVoto voto;
+    private String texto;
+
+    public Voto(Professor professor, Processo processo, TipoVoto voto, String texto) {
+        this.professor = professor;
+        this.processo = processo;
+        this.voto =voto;
+        this.texto = texto;
+    }
 }
 
 

@@ -82,14 +82,23 @@ public class ProcessoService {
         }
     };
 
-    public void votar(int idProfessor, int idProcesso, TipoVoto voto){
+    public void votarProfessor(int idProfessor, int idProcesso, TipoVoto voto, String texto){
         Professor professor = this.professorService.encontrarPorId(idProfessor);
         Processo processo = this.processoRepositorio.findById(idProcesso)
                 .orElseThrow(() -> new RuntimeException("Processo não encontrado"));
         VotoId votoId = new VotoId(idProfessor, idProcesso);
-        Voto votoFinal = new Voto(votoId, professor, processo, voto);
+        Voto votoFinal = new Voto(votoId, professor, processo, voto, texto);
+
         this.votoRepositorio.save(votoFinal);
     }
+
+    public void votarRelator(Integer idProcesso, TipoDecisao decisaoRelator, String texto){
+        Processo processo = this.processoRepositorio.findById(idProcesso)
+                .orElseThrow(() -> new RuntimeException("Processo não encontrado"));
+        processo.setParecer(decisaoRelator);
+        this.processoRepositorio.save(processo);
+    }
+
 
     public List<Processo> listarProcessos(FiltrarProcessoDTO filtro) {
         Assunto assunto = null;

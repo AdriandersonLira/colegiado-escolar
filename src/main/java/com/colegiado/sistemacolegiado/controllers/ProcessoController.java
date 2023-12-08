@@ -41,7 +41,7 @@ public class ProcessoController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{idAluno}")
-    public ProcessoDTO criarProcesso(@PathVariable Integer idAluno, CriarProcessoDTO processo){
+    public ProcessoDTO criarProcesso(@PathVariable Integer idAluno, @RequestBody CriarProcessoDTO processo){
         processo.setIdAluno(idAluno);
         return new ProcessoDTO(processoService.criarProcesso(processo));
     }
@@ -49,7 +49,7 @@ public class ProcessoController {
     @GetMapping("/filtro/aluno/{idAluno}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<ProcessoDTO> listarProcessosAluno(@PathVariable Integer idAluno, FiltrarProcessoDTO filtro){
+    public List<ProcessoDTO> listarProcessosAluno(@PathVariable Integer idAluno,@RequestBody FiltrarProcessoDTO filtro){
         filtro.setIdAluno(idAluno);
         return processoService.listarProcessos(filtro).stream().map(ProcessoDTO::new).collect(Collectors.toList());
     }
@@ -57,7 +57,7 @@ public class ProcessoController {
     @GetMapping("/filtro/professor/{idProfessor}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<ProcessoDTO> listarProcessosProcesso(@PathVariable Integer idProfessor, FiltrarProcessoDTO filtro){
+    public List<ProcessoDTO> listarProcessosProcesso(@PathVariable Integer idProfessor, @RequestBody FiltrarProcessoDTO filtro){
         filtro.setIdProfessor(idProfessor);
         return processoService.listarProcessos(filtro).stream().map(ProcessoDTO::new).collect(Collectors.toList());
     }
@@ -66,7 +66,7 @@ public class ProcessoController {
     @GetMapping("/filtro/coordenador")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<ProcessoDTO> listarProcessosCoordenador( FiltrarProcessoDTO filtro){
+    public List<ProcessoDTO> listarProcessosCoordenador(@RequestBody FiltrarProcessoDTO filtro){
         return processoService.listarProcessos(filtro).stream().map(ProcessoDTO::new).collect(Collectors.toList());
     }
 
