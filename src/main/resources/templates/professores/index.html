@@ -48,6 +48,12 @@
                     </td>
                     <td class="col-1" th:unless="${professor.coordenador}"></td>
 
+                    <td class="col-1" th:if="${professor.colegiado != null}">
+                        <a class="btn btn-outline-info" th:href="@{/reunioes/{id}/listreuniaocolegiado(id=${professor.id})}">
+                            <i class="fa-solid fa-list"></i>
+                        </a>
+                    </td>
+
 
                     <td class="col-1">
                         <a class="btn btn-outline-danger" data-bs-toggle="modal" th:attr="data-bs-target='#modal-warning'+${professor.id}"><i class="fa-solid fa-trash"></i></a>
@@ -72,7 +78,7 @@
                 </tr>
                 </tbody>
             </table>
-<!--            <div th:replace="~{/fragments/paging::paginator('institutions', ${navPage})}"></div>-->
+            <!--            <div th:replace="~{/fragments/paging::paginator('institutions', ${navPage})}"></div>-->
 
         </div>
     </div>

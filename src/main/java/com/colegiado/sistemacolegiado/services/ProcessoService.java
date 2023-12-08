@@ -136,6 +136,7 @@ public class ProcessoService {
         }
         processo.setProfessor(professor);
         processo.setDataDistribuicao(LocalDate.now());
+        processo.setStatus(StatusProcesso.DISTRIBUIDO);
         return processoRepositorio.save(processo);
     }
 
