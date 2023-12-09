@@ -1,10 +1,8 @@
 package com.colegiado.sistemacolegiado.services;
 
-import com.colegiado.sistemacolegiado.models.Aluno;
+import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.models.Processo;
 import com.colegiado.sistemacolegiado.models.Reuniao;
-import com.colegiado.sistemacolegiado.models.Colegiado;
-import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ProcessoRepositorio;
@@ -12,7 +10,6 @@ import com.colegiado.sistemacolegiado.repositories.ReuniaoRepositorio;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +85,45 @@ public class ReuniaoService {
             reuniaoRepositorio.save(reuniao);
         } else {
             throw new RuntimeException("Reunião ou Processo não encontrado");
+        }
+    }
+
+    public List<Reuniao> listarReuniaoPorStatusOuColegiado(List<StatusReuniao> status, int idColegiado){
+        Optional<Colegiado> colegiadoOptional = colegiadoRepositorio.findById(idColegiado);
+        if (colegiadoOptional.isPresent()){
+            return reuniaoRepositorio.findAllByStatusInAndColegiado(status, colegiadoOptional.get());
+        } else {
+            throw new RuntimeException("Colegiado não encontrado");
+        }
+    }
+
+    public void iniciarReuniao(Integer idReuniao){
+        if(reuniaoRepositorio.findByStatus(StatusReuniao.INICIADA).isEmpty()){
+            Optional<Reuniao> reuniaoOptional = reuniaoRepositorio.findById(idReuniao);
+
+            if (reuniaoOptional.isPresent()) {
+                Reuniao reuniao = reuniaoOptional.get();
+                reuniao.setStatus(StatusReuniao.INICIADA);
+                reuniaoRepositorio.save(reuniao);
+            } else {
+                throw new RuntimeException("Reunião não encontrada");
+            }
+        }else {
+            throw new RuntimeException("Já existe Reunião em andamento");
+        }
+    }
+
+    public void encerrarReuniao(Integer idReuniao){
+        Optional<Reuniao> reuniaoOptional = reuniaoRepositorio.findById(idReuniao);
+
+        if (reuniaoOptional.isPresent()) {
+            Reuniao reuniao = reuniaoOptional.get();
+            if(reuniao.getStatus().equals(StatusReuniao.INICIADA)){
+                reuniao.setStatus(StatusReuniao.ENCERRADA);
+                reuniaoRepositorio.save(reuniao);
+            }
+        } else {
+            throw new RuntimeException("Reunião não encontrada");
         }
     }
 

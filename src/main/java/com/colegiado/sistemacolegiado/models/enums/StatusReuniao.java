@@ -2,7 +2,8 @@ package com.colegiado.sistemacolegiado.models.enums;
 
 public enum StatusReuniao {
     ENCERRADA ("Encerrada"),
-    PROGRAMADA ("Programada");
+    PROGRAMADA ("Programada"),
+    INICIADA ("Iniciada");
 
     private String statusReuniao;
 

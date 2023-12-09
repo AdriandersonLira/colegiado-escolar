@@ -9,6 +9,7 @@ import com.colegiado.sistemacolegiado.models.Professor;
 import com.colegiado.sistemacolegiado.models.Voto.Voto;
 import com.colegiado.sistemacolegiado.models.Voto.VotoId;
 import com.colegiado.sistemacolegiado.models.dto.FiltrarProcessoDTO;
+import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.models.enums.TipoDecisao;
 import com.colegiado.sistemacolegiado.models.enums.TipoVoto;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -82,14 +84,37 @@ public class ProcessoService {
         }
     };
 
-    public void votar(int idProfessor, int idProcesso, TipoVoto voto){
-        Professor professor = this.professorService.encontrarPorId(idProfessor);
-        Processo processo = this.processoRepositorio.findById(idProcesso)
+    public void votarProfessor(VotoDTO voto){
+        Professor professor = this.professorService.encontrarPorId(voto.getIdProfessor());
+        Processo processo = this.processoRepositorio.findById(voto.getIdProcesso())
                 .orElseThrow(() -> new RuntimeException("Processo não encontrado"));
-        VotoId votoId = new VotoId(idProfessor, idProcesso);
-        Voto votoFinal = new Voto(votoId, professor, processo, voto);
+        VotoId votoId = new VotoId(voto.getIdProfessor(), voto.getIdProcesso());
+        Voto votoFinal = new Voto(votoId, professor, processo, voto.getVoto(), voto.getTexto());
+
         this.votoRepositorio.save(votoFinal);
     }
+
+    public void votarRelator(Integer idProcesso, TipoDecisao decisaoRelator, String texto){
+        Processo processo = this.processoRepositorio.findById(idProcesso)
+                .orElseThrow(() -> new RuntimeException("Processo não encontrado"));
+        processo.setParecer(decisaoRelator);
+        this.processoRepositorio.save(processo);
+    }
+
+    public void votarColegiado(List<VotoDTO> votos){
+        votos.forEach(this::votarProfessor);
+        int votoComRelator = votos.stream().filter(voto -> voto.getVoto().equals(TipoVoto.COM_RELATOR)).toList().size();
+        int votoDivergente = votos.stream().filter(voto -> voto.getVoto().equals(TipoVoto.DIVERGENTE)).toList().size();
+        if(votoDivergente > votoComRelator){
+            Processo processo = this.processoRepositorio.findById(votos.get(0).getIdProcesso())
+                    .orElseThrow(() -> new RuntimeException("Processo não encontrado"));
+            processo.setParecer(processo.getParecer().equals(TipoDecisao.DEFERIDO) ? TipoDecisao.INDEFERIDO : TipoDecisao.DEFERIDO);
+        }
+
+    }
+
+
+
 
     public List<Processo> listarProcessos(FiltrarProcessoDTO filtro) {
         Assunto assunto = null;
