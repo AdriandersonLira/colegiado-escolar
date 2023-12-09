@@ -124,4 +124,15 @@ public class ReuniaoController {
         return mv;
 
     }
+
+    @PostMapping("/reuniao/iniciar")
+    public ModelAndView iniciarReuniao(Integer idReuniao){
+        reuniaoService.iniciarReuniao(idReuniao);
+        return null;
+    }
+    @PostMapping("/reuniao/encerrar")
+    public ModelAndView encerrarReuniao(Integer idReuniao){
+        reuniaoService.encerrarReuniao(idReuniao);
+        return null;
+    }
 }

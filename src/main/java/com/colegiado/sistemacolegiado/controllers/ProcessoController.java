@@ -1,30 +1,25 @@
 package com.colegiado.sistemacolegiado.controllers;
 
-import com.colegiado.sistemacolegiado.models.*;
-import com.colegiado.sistemacolegiado.models.dto.AlunoDTO;
+import com.colegiado.sistemacolegiado.models.Aluno;
+import com.colegiado.sistemacolegiado.models.Assunto;
+import com.colegiado.sistemacolegiado.models.Processo;
 import com.colegiado.sistemacolegiado.models.dto.CriarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.FiltrarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.ProcessoDTO;
+import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.services.AlunoService;
 import com.colegiado.sistemacolegiado.services.ColegiadoService;
 import com.colegiado.sistemacolegiado.services.ProcessoService;
 import com.colegiado.sistemacolegiado.services.ProfessorService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.Banner;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -162,5 +157,11 @@ public class ProcessoController {
         mv.addObject("statusProcesso", StatusProcesso.values());
         mv.addObject("Aluno", aluno);
         return mv;
+    }
+
+    @PostMapping("/colegiado/votar")
+    public ModelAndView votarColegiado(List<VotoDTO> votos){
+        processoService.votarColegiado(votos);
+        return null;
     }
 }

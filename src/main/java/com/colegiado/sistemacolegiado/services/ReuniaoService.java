@@ -113,6 +113,20 @@ public class ReuniaoService {
         }
     }
 
+    public void encerrarReuniao(Integer idReuniao){
+        Optional<Reuniao> reuniaoOptional = reuniaoRepositorio.findById(idReuniao);
+
+        if (reuniaoOptional.isPresent()) {
+            Reuniao reuniao = reuniaoOptional.get();
+            if(reuniao.getStatus().equals(StatusReuniao.INICIADA)){
+                reuniao.setStatus(StatusReuniao.ENCERRADA);
+                reuniaoRepositorio.save(reuniao);
+            }
+        } else {
+            throw new RuntimeException("Reunião não encontrada");
+        }
+    }
+
     public List<Reuniao> reunioesdocolegiado (int idColegiado){
         return reuniaoRepositorio.listareuniaocolegiado(idColegiado);
     }
