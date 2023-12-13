@@ -54,6 +54,12 @@
                         </a>
                     </td>
 
+                    <td class="col-1" th:if="${professor.processos != null and professor.processos.size() > 0}">
+                        <a class="btn btn-outline-info" th:href="@{/processos/{id}/listarprocessosdoprofessor(id=${professor.id})}">
+                            <i class="fa-sharp fa-solid fa-gavel fa-shake"></i>
+                        </a>
+                    </td>
+
 
                     <td class="col-1">
                         <a class="btn btn-outline-danger" data-bs-toggle="modal" th:attr="data-bs-target='#modal-warning'+${professor.id}"><i class="fa-solid fa-trash"></i></a>

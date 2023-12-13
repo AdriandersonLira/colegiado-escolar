@@ -1,0 +1,34 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts :: head('Lista de Processos')}">
+</head>
+<body>
+
+<div style="width: 50%; margin: 0 auto;">
+    <h2 style="text-align: center;">Votar em Processo</h2>
+
+    <form action="#" th:action="@{/processos/votar}" th:object="${ProcessoEmVoto}" method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <div style="margin-bottom: 15px;">
+            <label for="parecer" style="display: block; margin-bottom: 5px;">Tipo de Decisão:</label>
+            <select id="parecer" name="parecer" class="form-select" style="width: 100%;" th:field="*{parecer}">
+                <option th:each="decisao : ${statusDecisao}" th:value="${decisao}" th:text="${decisao.getTipoDecisao()}"></option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="justificativa" style="display: block; margin-bottom: 5px;">Justificativa:</label>
+            <textarea id="justificativa" name="justificativa" th:field="*{justificativa}" rows="4" cols="50" style="width: 100%;"></textarea>
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit"  class="btn btn-primary" style="padding: 10px 20px; font-size: 16px;">Votar</button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -39,4 +39,8 @@ public class Professor extends Usuario{
     public boolean professorcordenador(){
         return this.coordenador;
     }
+
+    public void setProcesso (Processo processo){
+        processos.add(processo);
+    }
 }

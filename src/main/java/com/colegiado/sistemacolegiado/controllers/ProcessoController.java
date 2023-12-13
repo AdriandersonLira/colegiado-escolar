@@ -3,11 +3,13 @@ package com.colegiado.sistemacolegiado.controllers;
 import com.colegiado.sistemacolegiado.models.Aluno;
 import com.colegiado.sistemacolegiado.models.Assunto;
 import com.colegiado.sistemacolegiado.models.Processo;
+import com.colegiado.sistemacolegiado.models.Professor;
 import com.colegiado.sistemacolegiado.models.dto.CriarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.FiltrarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.ProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
+import com.colegiado.sistemacolegiado.models.enums.TipoDecisao;
 import com.colegiado.sistemacolegiado.services.AlunoService;
 import com.colegiado.sistemacolegiado.services.ColegiadoService;
 import com.colegiado.sistemacolegiado.services.ProcessoService;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -164,4 +167,43 @@ public class ProcessoController {
         processoService.votarColegiado(votos);
         return null;
     }
+
+    @GetMapping ("{id}/listarprocessosdoprofessor")
+    public ModelAndView listarprocesso (@PathVariable Integer id){
+        ModelAndView mv = new ModelAndView("professores/processosdoprofessor");
+        Professor professor = professorService.encontrarPorId(id);
+        List<Processo> processos = professor.getProcessos();
+        mv.addObject("processos", processos);
+        mv.addObject("professor", professor);
+        return mv;
+    }
+
+    @GetMapping("votar/{id}")
+    public ModelAndView votarprocesso (@PathVariable Integer id){
+        ModelAndView mv = new ModelAndView("professores/votar");
+        Optional<Processo> processoOptional = processoService.encontrarPorId(id);
+
+        if(processoOptional.isPresent()){
+            mv.addObject("ProcessoEmVoto", processoOptional.get());
+            mv.addObject("statusDecisao", TipoDecisao.values());
+            return mv;
+        }
+        mv.setViewName("professores/processosdoprofessor");
+        return mv;
+    }
+
+    @PostMapping("/votar")
+    public ModelAndView realizarvoto (@ModelAttribute("ProcessoEmVoto") Processo processoEmVoto){
+        System.out.println(processoEmVoto.getId());
+
+        Processo processo = processoService.votarRelator(processoEmVoto.getId(), processoEmVoto.getParecer(), processoEmVoto.getJustificativa());
+        System.out.println(processo.getParecer().getTipoDecisao());
+        ModelAndView mv = new ModelAndView("professores/processosdoprofessor");
+        Professor professor = professorService.encontrarPorId(processo.getProfessor().getId());
+        List<Processo> processos = professor.getProcessos();
+        mv.addObject("processos", processos);
+        mv.addObject("professor", professor);
+        return mv;
+    }
+
 }

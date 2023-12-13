@@ -42,6 +42,8 @@ public class Processo {
     private Assunto assunto;
     private String requerimento;
     private StatusProcesso status;
+    @Getter
+    private String justificativa;
 
     public Processo(CriarProcessoDTO processoDTO, Aluno aluno, Assunto assunto) {
         this.aluno = aluno;
@@ -60,8 +62,16 @@ public class Processo {
         return status != null ? status.getStatuString() : "";
     }
 
+    public String getDecisao(){
+        return parecer != null ? parecer.getTipoDecisao() : "";
+    }
+
     public String getRequerimento(){
         return requerimento;
+    }
+
+    public void setJustificativa(String justificativa) {
+        this.justificativa = justificativa;
     }
 
     public String toString() {

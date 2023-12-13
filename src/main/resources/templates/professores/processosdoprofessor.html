@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts :: head('Lista de Processos')}">
+</head>
+<body>
+<header th:replace="~{layouts :: header('Listagem de Processos')}"></header>
+
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div role="alert" class="alert d-flex align-items-center alert-dismissible fade show" th:if="${message ne null}" th:classappend="${error ? 'alert-danger' : 'alert-success'}">
+            <i class="me-2" th:classappend="${error ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-check'}"></i>
+            <div th:text="${message}"></div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Requerimento</th>
+                    <th scope="col">Aluno</th>
+                    <th scope="col">Professor</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Parecer</th>
+                    <th scope="col">Data de Recebimento</th>
+                    <th scope="col">Data de Distribuição</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="processo : ${processos}">
+                    <th class="col-1" scope="row" th:text="${processo.getId()}">ID</th>
+                    <td class="col-1" th:text="${processo.requerimento}">Requerimento</td>
+                    <td class="col-1" th:text="${processo.aluno != null ? processo.aluno.getNome() : ''}">Id Aluno</td>
+                    <td class="col-3" th:text="${processo.professor != null ? processo.professor.nome : ''}">Professor</td>
+                    <td class="col-1" th:text="${processo.getStatus()}">Status</td>
+                    <td class="col-1" th:text="${processo.parecer}">Parecer</td>
+                    <td class="col-3" th:text="${#temporals.format(processo.dataRecepcao, 'dd/MM/yyyy')}">Data de Recebimento</td>
+                    <td class="col-3" th:text="${#temporals.format(processo.dataDistribuicao, 'dd/MM/yyyy')}">Data de Distribuição</td>
+
+                    <td class="col-1">
+                        <a class="btn btn-outline-warning" th:href="@{/processos/votar/{id}(id=${processo.id})}"><i class="fa-solid fa-check-to-slot"></i></a>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+            <!--            <div th:replace="~{/fragments/paging::paginator('institutions', ${navPage})}"></div>-->
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+</body>
+</html>
