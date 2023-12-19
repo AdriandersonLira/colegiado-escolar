@@ -1,20 +1,20 @@
 package com.colegiado.sistemacolegiado.services;
 
 
-import com.colegiado.sistemacolegiado.models.Aluno;
-import com.colegiado.sistemacolegiado.models.Assunto;
+import com.colegiado.sistemacolegiado.models.*;
 import com.colegiado.sistemacolegiado.models.dto.CriarProcessoDTO;
-import com.colegiado.sistemacolegiado.models.Processo;
-import com.colegiado.sistemacolegiado.models.Professor;
 import com.colegiado.sistemacolegiado.models.Voto.Voto;
 import com.colegiado.sistemacolegiado.models.Voto.VotoId;
 import com.colegiado.sistemacolegiado.models.dto.FiltrarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
+import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.models.enums.TipoDecisao;
 import com.colegiado.sistemacolegiado.models.enums.TipoVoto;
 import com.colegiado.sistemacolegiado.repositories.ProcessoRepositorio;
+import com.colegiado.sistemacolegiado.repositories.ReuniaoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.VotoRepositorio;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProcessoService {
     final ProcessoRepositorio processoRepositorio;
+    final ReuniaoRepositorio reuniaoRepositorio;
     final ProfessorService professorService;
     final VotoRepositorio votoRepositorio;
     final AlunoService alunoService;
@@ -180,5 +182,44 @@ public class ProcessoService {
         }
 
         return aluno.getProcessos();
+    }
+
+    public void processarVotos(int processoId, Map<String, String> votos) {
+        Processo processo = processoRepositorio.findById(processoId).orElseThrow(() -> new EntityNotFoundException("Processo não encontrado"));
+        processo.setStatus(StatusProcesso.JULGADO);
+        Reuniao reuniao = processo.getReuniao();
+        reuniao.setStatus(StatusReuniao.ENCERRADA);
+
+        // Contadores de votos
+        int votosComRelator = 0;
+        int votosDivergentes = 0;
+
+        // Loop através dos votos
+        for (Map.Entry<String, String> entry : votos.entrySet()) {
+            String professorNome = entry.getKey();
+            String escolhaVoto = entry.getValue();
+
+            // Verifica a escolha de voto e atualiza os contadores
+            if ("COM_RELATOR".equals(escolhaVoto)) {
+                votosComRelator++;
+            } else if ("DIVERGENTE".equals(escolhaVoto)) {
+                votosDivergentes++;
+            }
+        }
+
+        // Define o novo parecer com base na maioria dos votos e no parecer do professor relator
+        if (votosComRelator > votosDivergentes && processo.getParecer() == TipoDecisao.DEFERIDO) {
+            processo.setParecer(TipoDecisao.DEFERIDO);
+        } else if (votosDivergentes > votosComRelator && processo.getParecer() == TipoDecisao.DEFERIDO) {
+            processo.setParecer(TipoDecisao.INDEFERIDO);
+        } else if (votosComRelator > votosDivergentes && processo.getParecer() == TipoDecisao.INDEFERIDO) {
+            processo.setParecer(TipoDecisao.INDEFERIDO);
+        } else if (votosDivergentes > votosComRelator && processo.getParecer() == TipoDecisao.INDEFERIDO) {
+            processo.setParecer(TipoDecisao.DEFERIDO);
+        }
+
+        // Salva o processo com o novo parecer
+        reuniaoRepositorio.save(reuniao);
+        processoRepositorio.save(processo);
     }
 }

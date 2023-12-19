@@ -2,26 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layouts :: head('Lista de Reuniões')}"></head>
 <body>
-<header th:replace="~{layouts :: header('Listagem de Reuniões do Colegiado')}"></header>
+<header th:replace="~{layouts :: header('Listagem de Reuniões')}"></header>
 
 <div class="container mt-4 mb-5">
     <div class="row">
-        <form class="needs-validation" th:action="@{/reunioes/filtrar/{id}(id=${professor.getId()})}" method="get" novalidate>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label for="statusFilter" class="form-label">Filtrar por Status:</label>
-                    <select id="statusFilter" name="statusFilter" class="form-select">
-                        <option th:text="'-- Nenhum Statuts --'" th:value="${null}"></option>
-                        <option th:each="status :${statusReuniao}" th:value="${status}" th:text="${status.getStatusReuniao()}"></option>
-                    </select>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
-        </form>
-
-
-
+        <div th:if="${message}" class="alert" th:class="${error} ? 'alert-danger' : 'alert-success'" role="alert">
+            <i th:class="${error} ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-check'" class="me-2"></i>
+            <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="col-12">
             <table class="table table-striped">
                 <thead>
@@ -36,7 +25,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="reuniao : ${reunioescolegiado}">
+                <tr th:each="reuniao : ${reunioes}">
                     <th class="col-1" scope="row" th:text="${reuniao.getId()}">ID</th>
                     <td class="col-3" th:text="${#temporals.format(reuniao.dataReuniao, 'dd/MM/yyyy')}">Data</td>
                     <td class="col-3" th:text="${reuniao.status}">Status</td>

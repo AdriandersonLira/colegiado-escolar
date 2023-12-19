@@ -59,44 +59,32 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Colegiado</th>
+                    <th scope="col">Requerimento</th>
                     <th scope="col">Aluno</th>
                     <th scope="col">Professor</th>
-                    <th scope="col">Requerimento</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Parecer</th>
+                    <th scope="col">Data de Recebimento</th>
+                    <th scope="col">Data de Distribuição</th>
                     <th scope="col">Ação</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="reuniao : ${reunioes}">
-                    <td class="col-1" th:text="${reuniao.getId()}">ID</td>
-                    <td class="col-2" th:text="${#temporals.format(reuniao.dataReuniao, 'dd/MM/yyyy')}">Data</td>
-                    <td class="col-2" th:text="${reuniao.status}">Status</td>
-                    <td class="col-2" th:text="${reuniao.colegiado.curso}">Colegiado</td>
-                    <td class="col-2">
-                        <span th:each="processo : ${reuniao.processos}">
-                            <span th:text="${processo.aluno.getNome()}"></span>
-                        </span>
-                    </td>
-                    <td class="col-2">
-                        <span th:each="processo : ${reuniao.processos}">
-                            <span th:text="${processo.professor.getNome()}"></span>
-                        </span>
-                    </td>
-                    <td class="col-2">
-                        <span th:each="processo : ${reuniao.processos}">
-                            <span th:text="${processo.requerimento}"></span>
-                        </span>
-                    </td>
+                <tr th:each="processo : ${processos}">
+                    <th scope="row" th:text="${processo.getId()}">ID</th>
+                    <td th:text="${processo.requerimento}">Requerimento</td>
+                    <td th:text="${processo.aluno != null ? processo.aluno.getNome() : ''}">Id Aluno</td>
+                    <td th:text="${processo.professor != null ? processo.professor.nome : ''}">Professor</td>
+                    <td th:text="${processo.getStatus()}">Status</td>
+                    <td th:text="${processo.parecer}">Parecer</td>
+                    <td th:text="${#temporals.format(processo.dataRecepcao, 'dd/MM/yyyy')}">Data de Recebimento</td>
+                    <td th:text="${#temporals.format(processo.dataDistribuicao, 'dd/MM/yyyy')}">Data de Distribuição</td>
+
+                    <!-- Adiciona o ícone apenas para processos com status 'DISTRIBUIDO' -->
                     <td class="col-1">
-                        <span th:each="processo : ${reuniao.processos}">
-                            <span th:if="${processo.parecer != null}">
-                                <a class="btn btn-outline-warning" th:href="@{'/reunioes/iniciar-reuniao/' + ${reuniao.id}}">
-                                    <i class="fa-solid fa-flag-checkered"></i>
-                                </a>
-                            </span>
-                        </span>
+                        <a class="btn btn-outline-warning" th:href="@{'/reunioes/votacao/' + ${processo.id}}">
+                            <i class="fa-solid fa-flag-checkered"></i>
+                        </a>
                     </td>
                 </tr>
                 </tbody>

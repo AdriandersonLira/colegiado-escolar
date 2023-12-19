@@ -4,16 +4,18 @@ import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.models.Professor;
 import com.colegiado.sistemacolegiado.models.dto.CriarColegiadoDTO;
 import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
+import com.colegiado.sistemacolegiado.repositories.ProfessorRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class ColegiadoService {
     final ColegiadoRepositorio colegiadoRepositorio;
-    final ProfessorService professorService;
+    final ProfessorRepositorio professorRepositorio;
 
     public Colegiado criarColegiado(CriarColegiadoDTO colegiadoDTO){
         return this.colegiadoRepositorio.save(new Colegiado(colegiadoDTO));
@@ -24,7 +26,7 @@ public class ColegiadoService {
     }
 
     public boolean temcolegiado(Integer id){
-        Professor verificarprofessor = professorService.encontrarPorId(id);
+        Professor verificarprofessor = professorRepositorio.findById(id).orElseThrow(() -> new RuntimeException("Professor não encontrado"));
         if(verificarprofessor.getColegiado() != null){
             return true;
         }
@@ -43,15 +45,21 @@ public class ColegiadoService {
     }
 
     public Colegiado adicionarProfessor(int idColegiado, int idProfessor){
-        Professor professor = professorService.encontrarPorId(idProfessor);
+        Optional<Professor> professorOptional = professorRepositorio.findById(idProfessor);
+        Professor professor = professorOptional.get();
         Colegiado colegiado = encontrarPorId(idColegiado);
-        colegiado.getProfessores().add(professor);
+        if(professor.getColegiado() != null){
+            Colegiado antigocolegiado = professor.getColegiado();
+            antigocolegiado.removerProfessorDoColegiado(professor);
+        }
+        colegiado.adicionarProfessorNoColegiado(professor);
         professor.setColegiado(colegiado);
+        professorRepositorio.save(professor);
         return this.colegiadoRepositorio.save(colegiado);
     }
 
     public Colegiado removerProfessor(int idColegiado, int idProfessor){
-        Professor professor = professorService.encontrarPorId(idProfessor);
+        Professor professor = professorRepositorio.findById(idProfessor).orElseThrow(() -> new RuntimeException("Professor não encontrado"));
         Colegiado colegiado = encontrarPorId(idColegiado);
         if (colegiado.getProfessores().contains(professor)) {
             colegiado.getProfessores().remove(professor);

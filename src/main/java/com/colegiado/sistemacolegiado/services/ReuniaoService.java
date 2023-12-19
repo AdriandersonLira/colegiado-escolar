@@ -26,7 +26,10 @@ public class ReuniaoService {
     public Reuniao criarReuniao(Reuniao reuniao, List<Processo> processos){
         for (Processo Tprocesso : processos){
             Tprocesso.setReuniao(reuniao);
+            //reuniao.setProcesso(Tprocesso);
         }
+
+        reuniao.setProcessos(processos);
 
         for (Processo processo : processos) {
             this.processoRepositorio.save(processo);
@@ -97,7 +100,7 @@ public class ReuniaoService {
         }
     }
 
-    public void iniciarReuniao(Integer idReuniao){
+    /*public void iniciarReuniao(Integer idReuniao){
         if(reuniaoRepositorio.findByStatus(StatusReuniao.INICIADA).isEmpty()){
             Optional<Reuniao> reuniaoOptional = reuniaoRepositorio.findById(idReuniao);
 
@@ -110,6 +113,20 @@ public class ReuniaoService {
             }
         }else {
             throw new RuntimeException("Já existe Reunião em andamento");
+        }
+    }*/
+
+    public void iniciarReuniao(Integer idReuniao){
+        if(reuniaoRepositorio.findByStatus(StatusReuniao.INICIADA).isEmpty()){
+            Optional<Reuniao> reuniaoOptional = reuniaoRepositorio.findById(idReuniao);
+
+            if (reuniaoOptional.isPresent()) {
+                Reuniao reuniao = reuniaoOptional.get();
+                reuniao.setStatus(StatusReuniao.INICIADA);
+                reuniaoRepositorio.save(reuniao);
+            } else {
+                throw new RuntimeException("Reunião não encontrada");
+            }
         }
     }
 
