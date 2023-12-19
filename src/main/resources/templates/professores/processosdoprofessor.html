@@ -6,36 +6,6 @@
 <header th:replace="~{layouts :: header('Listagem de Processos')}"></header>
 
 <div class="container mt-4 mb-5">
-    <form class="needs-validation" th:action="@{/processos/filtrar/{id}(id=${Aluno.getId()})}" method="get" novalidate>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label for="requerimeto" class="form-label">Filtrar por Requerimento:</label>
-                <select id="requerimeto" name="requerimentoFilter" class="form-select">
-                    <option value="" th:text="'-- Nenhum Requerimento --'"></option>
-                    <option th:each="processo :${processos}" th:value="${processo.getRequerimento()}" th:text="${processo.getRequerimento()}"></option>
-                </select>
-            </div>
-
-            <div class="col-md-4">
-                <label for="dataFilter" class="form-label">Data:</label>
-                <select id="dataFilter" name="dataFilter" class="form-select">
-                    <option value="" th:text="'-- Não filtrar por data --'"></option>
-                    <option value="filtrar" th:text="'-- Filtrar pela data mais recente --'"></option>
-                </select>
-            </div>
-
-            <div class="col-md-4">
-                <label for="statusFilter" class="form-label">Filtrar por Status:</label>
-                <select id="statusFilter" name="statusFilter" class="form-select">
-                    <option value="" th:text="'-- Nenhum Statuts --'"></option>
-                    <option th:each="status :${statusProcesso}" th:value="${status}" th:text="${status.getStatuString()}"></option>
-                </select>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
-    </form>
-
     <div class="row">
         <div role="alert" class="alert d-flex align-items-center alert-dismissible fade show" th:if="${message ne null}" th:classappend="${error ? 'alert-danger' : 'alert-success'}">
             <i class="me-2" th:classappend="${error ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-check'}"></i>
@@ -51,6 +21,7 @@
                     <th scope="col">Aluno</th>
                     <th scope="col">Professor</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Parecer</th>
                     <th scope="col">Data de Recebimento</th>
                     <th scope="col">Data de Distribuição</th>
                 </tr>
@@ -62,17 +33,20 @@
                     <td class="col-1" th:text="${processo.aluno != null ? processo.aluno.getNome() : ''}">Id Aluno</td>
                     <td class="col-3" th:text="${processo.professor != null ? processo.professor.nome : ''}">Professor</td>
                     <td class="col-1" th:text="${processo.getStatus()}">Status</td>
+                    <td class="col-1" th:text="${processo.parecer}">Parecer</td>
                     <td class="col-3" th:text="${#temporals.format(processo.dataRecepcao, 'dd/MM/yyyy')}">Data de Recebimento</td>
                     <td class="col-3" th:text="${#temporals.format(processo.dataDistribuicao, 'dd/MM/yyyy')}">Data de Distribuição</td>
+
+                    <td class="col-1">
+                        <a class="btn btn-outline-warning" th:href="@{/processos/votar/{id}(id=${processo.id})}"><i class="fa-solid fa-check-to-slot"></i></a>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
             <!--            <div th:replace="~{/fragments/paging::paginator('institutions', ${navPage})}"></div>-->
 
         </div>
-    </div>
-    <div>
-        <a type="button" class="btn btn-success" href="/processos/cadastrar"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;ovo Processo</a>
     </div>
 </div>
 

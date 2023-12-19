@@ -25,19 +25,19 @@
 
         <div class="mb-3">
             <label class="form-label">Descrição</label>
-            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{descricao}">
+            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{descricao}" required>
             <div class="invalid-feedback" th:errors="*{descricao}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Portaria</label>
-            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{portaria}">
+            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{portaria}" required>
             <div class="invalid-feedback" th:errors="*{portaria}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Curso</label>
-            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{curso}">
+            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{curso}" required>
             <div class="invalid-feedback" th:errors="*{curso}"></div>
         </div>
 

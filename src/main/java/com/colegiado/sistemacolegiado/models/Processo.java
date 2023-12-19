@@ -33,13 +33,17 @@ public class Processo {
     @ManyToOne
     @JoinColumn(name = "aluno_id", referencedColumnName = "id")
     private Aluno aluno;
+    //lembrar de fazer a relacao na criacao da reuniao. colocar a reuniao no processo
     @ManyToOne
+    @JoinColumn(name = "reuniao_id", referencedColumnName = "id")
     private Reuniao reuniao;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "assunto_id", referencedColumnName = "id")
     private Assunto assunto;
     private String requerimento;
     private StatusProcesso status;
+    @Getter
+    private String justificativa;
 
     public Processo(CriarProcessoDTO processoDTO, Aluno aluno, Assunto assunto) {
         this.aluno = aluno;
@@ -58,12 +62,22 @@ public class Processo {
         return status != null ? status.getStatuString() : "";
     }
 
+    public String getDecisao(){
+        return parecer != null ? parecer.getTipoDecisao() : "";
+    }
+
     public String getRequerimento(){
         return requerimento;
     }
 
+    public void setJustificativa(String justificativa) {
+        this.justificativa = justificativa;
+    }
+
     public String toString() {
         return "ID: " + id + "\n" +
-                "Data: " + dataRecepcao;
+                "Data: " + dataRecepcao + "\n" +
+                "Requerimento: " + requerimento;
+
     }
 }

@@ -13,31 +13,31 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Nome do Aluno</label>
-            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{nome}">
+            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{nome}" required>
             <div class="invalid-feedback" th:errors="*{nome}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Telefone</label>
-            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{fone}">
+            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{fone}" required>
             <div class="invalid-feedback" th:errors="*{fone}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Matrícula</label>
-            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{matricula}">
+            <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{matricula}" required>
             <div class="invalid-feedback" th:errors="*{matricula}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Login</label>
-            <input class="form-control" th:errorclass="is-invalid" type="email" th:field="*{login}">
+            <input class="form-control" th:errorclass="is-invalid" type="email" th:field="*{login}" required>
             <div class="invalid-feedback" th:errors="*{login}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Senha</label>
-            <input class="form-control" th:errorclass="is-invalid" type="password" th:field="*{senha}">
+            <input class="form-control" th:errorclass="is-invalid" type="password" th:field="*{senha}" required>
             <div class="invalid-feedback" th:errors="*{senha}"></div>
         </div>
 

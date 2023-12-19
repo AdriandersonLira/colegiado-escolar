@@ -20,8 +20,11 @@
                     <th scope="col">Telefone</th>
                     <th scope="col">Matrícula</th>
                     <th scope="col">Coordenador</th>
+                    <th scope="col">Colegiado</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -31,15 +34,30 @@
                     <td class="col-3" th:text="${professor.fone}">Telefone</td>
                     <td class="col-3" th:text="${professor.matricula.toString()}">Matrícula</td>
                     <td class="col-1" th:text="${professor.coordenador.toString() == 'true' ? 'Sim' : 'Não'}">Coordenador</td>
+                    <td class="col-3" th:if="${professor.colegiado != null}" th:text="${professor.colegiado.curso}">Colegiado</td>
+                    <td class="col-3" th:unless="${professor.colegiado != null}"></td>
+
                     <td class="col-1">
                         <a class="btn btn-outline-warning" th:href="@{/professores/{value}/edit(value = ${professor.id})}"><i class="fa-solid fa-pen"></i></a>
                     </td>
-:
-                    <td class="col-1" th:if="${professor.coordenador}">
-                        <a class="btn btn-outline-info" th:href="@{/professores/{value}/atribuirprocesso(value = ${professor.id})}"><i class="fa-solid fa-tasks"></i></a>
-                    </td>
-                    <td class="col-1" th:unless="${professor.coordenador}">
 
+                    <td class="col-1" th:if="${professor.coordenador}">
+                        <a class="btn btn-outline-info" th:href="@{/professores/{id}/atribuir(id = ${professor.id})}">
+                            <i class="fa-solid fa-gear fa-spin-pulse"></i>
+                        </a>
+                    </td>
+                    <td class="col-1" th:unless="${professor.coordenador}"></td>
+
+                    <td class="col-1" th:if="${professor.colegiado != null}">
+                        <a class="btn btn-outline-info" th:href="@{/reunioes/{id}/listreuniaocolegiado(id=${professor.id})}">
+                            <i class="fa-solid fa-list"></i>
+                        </a>
+                    </td>
+
+                    <td class="col-1" th:if="${professor.processos != null and professor.processos.size() > 0}">
+                        <a class="btn btn-outline-info" th:href="@{/processos/{id}/listarprocessosdoprofessor(id=${professor.id})}">
+                            <i class="fa-sharp fa-solid fa-gavel fa-shake"></i>
+                        </a>
                     </td>
 
 
@@ -66,7 +84,7 @@
                 </tr>
                 </tbody>
             </table>
-<!--            <div th:replace="~{/fragments/paging::paginator('institutions', ${navPage})}"></div>-->
+            <!--            <div th:replace="~{/fragments/paging::paginator('institutions', ${navPage})}"></div>-->
 
         </div>
     </div>
