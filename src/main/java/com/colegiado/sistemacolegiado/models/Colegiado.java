@@ -54,4 +54,15 @@ public class Colegiado {
     public int getId() {
         return id;
     }
+
+    public void adicionarProfessorNoColegiado (Professor professor){
+        this.professores.add(professor);
+    }
+
+    public void removerProfessorDoColegiado(Professor professor) {
+        if (professores != null && professores.contains(professor)) {
+            professores.remove(professor);
+            professor.setColegiado(null);
+        }
+    }
 }

@@ -15,6 +15,7 @@ import com.colegiado.sistemacolegiado.services.ProfessorService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -146,7 +147,7 @@ public class ProfessorController {
     }
 
     @PostMapping
-    public ModelAndView criarProfessor(ModelAndView modelAndView, @Valid UsuarioDTO professor, @RequestParam (required = false) Integer colegiado, BindingResult bindingResult, RedirectAttributes attr){
+    public ModelAndView criarProfessor(ModelAndView modelAndView, @Valid UsuarioDTO professor, @RequestParam (required = false) Integer colegiado, BindingResult bindingResult, RedirectAttributes attr) throws ChangeSetPersister.NotFoundException {
         if (professorService.verificarTelefone(professor.getFone())) {
             attr.addFlashAttribute("message", "Conflict: Telefone já existe no banco");
             attr.addFlashAttribute("error", "true");
@@ -169,8 +170,8 @@ public class ProfessorController {
             modelAndView.setViewName("professores/new");
         } else {
             if(colegiado != null){
-                Colegiado objcolegiado = colegiadoService.encontrarPorId(colegiado);
-                professorService.criarProfessor(professor, objcolegiado);
+                //Colegiado objcolegiado = colegiadoService.encontrarPorId(colegiado);
+                professorService.criarProfessor(professor, colegiado);
             }else {
                 professorService.criarProfessor(professor, null);
             }

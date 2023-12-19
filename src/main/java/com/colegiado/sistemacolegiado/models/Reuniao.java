@@ -1,6 +1,9 @@
 package com.colegiado.sistemacolegiado.models;
 
+import com.colegiado.sistemacolegiado.models.Voto.Voto;
 import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
+import com.colegiado.sistemacolegiado.models.enums.TipoDecisao;
+import com.colegiado.sistemacolegiado.models.enums.TipoVoto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +35,9 @@ public class Reuniao {
     @OneToMany(mappedBy = "reuniao", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Processo> processos;
 
+    @OneToMany(mappedBy = "reuniao", cascade = CascadeType.ALL)
+    private List<Voto> votos;
+
     public Reuniao (Colegiado colegiado, List<Processo> processosPassados, StatusReuniao statuscriacao){
         this.colegiado = colegiado;
         this.processos = processosPassados;
@@ -59,6 +65,34 @@ public class Reuniao {
 
 
         return sb.toString();
+    }
+
+    public void adicionarVoto(Voto voto) {
+        votos.add(voto);
+    }
+
+    public int contarVotosComRelator() {
+        return (int) votos.stream().filter(v -> v.getVoto() == TipoVoto.COM_RELATOR).count();
+    }
+
+    public int contarVotosDivergentes() {
+        return (int) votos.stream().filter(v -> v.getVoto() == TipoVoto.DIVERGENTE).count();
+    }
+
+    public TipoDecisao calcularResultadoVotacao() {
+        int votosComRelator = contarVotosComRelator();
+        int votosDivergentes = contarVotosDivergentes();
+
+        // Lógica para determinar o resultado da votação
+        if (votosComRelator > votosDivergentes) {
+            return TipoDecisao.DEFERIDO;
+        } else {
+            return TipoDecisao.INDEFERIDO;
+        }
+    }
+
+    public void setProcesso (Processo processo){
+        processos.add(processo);
     }
 
 }

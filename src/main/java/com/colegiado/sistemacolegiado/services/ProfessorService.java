@@ -5,9 +5,15 @@ import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.models.Professor;
 import com.colegiado.sistemacolegiado.models.dto.ProfessorDTO;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
+import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ProfessorRepositorio;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +22,23 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfessorService {
     final ProfessorRepositorio professorRepositorio;
-    //final  ColegiadoService colegiadoService;
+    final ColegiadoRepositorio colegiadoRepositorio;
 
-    public Professor criarProfessor(UsuarioDTO professorDTO, Colegiado colegiado){
-        //Colegiado colegiado = colegiadoService.encontrarPorId(idcolegiado);
+    @Transactional
+    public Professor criarProfessor(UsuarioDTO professorDTO, Integer idcolegiado){
+        if(idcolegiado != null){
+            Colegiado colegiado = colegiadoRepositorio.findById(idcolegiado)
+                    .orElseThrow(() -> new EntityNotFoundException("Colegiado não encontrado"));
+            Professor professor = new Professor(professorDTO);
+
+            professor.setColegiado(colegiado);
+            colegiado.adicionarProfessorNoColegiado(professor);
+            colegiadoRepositorio.save(colegiado);
+            return professorRepositorio.save(professor);
+
+        }
+
         Professor professor = new Professor(professorDTO);
-        professor.setColegiado(colegiado);
         return professorRepositorio.save(professor);
     }
 

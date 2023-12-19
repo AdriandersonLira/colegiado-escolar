@@ -1,6 +1,9 @@
 package com.colegiado.sistemacolegiado.controllers;
 
 import com.colegiado.sistemacolegiado.models.*;
+import com.colegiado.sistemacolegiado.models.Voto.Voto;
+import com.colegiado.sistemacolegiado.models.Voto.VotoId;
+import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.services.ColegiadoService;
@@ -11,10 +14,12 @@ import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.*;
 
@@ -87,7 +92,7 @@ public class ReuniaoController {
         }
 
         modelAndView.addObject("reunioes", reunioes);
-        modelAndView.setViewName("reunioes/index");
+        modelAndView.setViewName("reunioes/listarreunioes");
         return modelAndView;
     }
 
@@ -125,14 +130,83 @@ public class ReuniaoController {
 
     }
 
-    @PostMapping("/reuniao/iniciar")
+    @GetMapping("/iniciarReuniao")
+    public ModelAndView iniciarReuniao (ModelAndView modelAndView){
+        List<Reuniao> reunioes = reuniaoService.listarReunioes();
+        for (Reuniao reuniao : reunioes) {
+            System.out.println(reuniao.toString());
+            System.out.println(); // Adiciona uma linha em branco entre as reuniões
+        }
+
+        modelAndView.addObject("reunioes", reunioes);
+        modelAndView.setViewName("reunioes/index");
+        return modelAndView;
+    }
+
+    @GetMapping("/iniciar-reuniao/{id}")
+    public ModelAndView iniciarReuniao(@PathVariable Integer id){
+        ModelAndView mv = new ModelAndView("reunioes/iniciodareuniao");
+
+        List<Reuniao> reunioes = reuniaoService.listarReunioes();
+        boolean reuniaoIniciada = false;
+
+
+        for (Reuniao reuniao : reunioes){
+            if(reuniao.getStatus().equals(StatusReuniao.INICIADA)){
+                reuniaoIniciada = true;
+
+                if (!Objects.equals(reuniao.getId(), id)) {
+                    RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+                    redirectAttributes.addFlashAttribute("error", true);
+                    redirectAttributes.addFlashAttribute("message", "A reunião já foi iniciada. Não é possível iniciar outra reunião.");
+
+                    mv.setViewName("reunioes/listarreunioes");
+                    mv.addObject("reunioes", reunioes);
+                    return mv;
+                }
+            }
+
+        }
+
+        Optional<Reuniao> reuniaoOptional = reuniaoService.encontrarPorId(id);
+
+        if(reuniaoOptional.isPresent()){
+            Reuniao reuniao = reuniaoOptional.get();
+            reuniaoService.iniciarReuniao(id);
+            List<Processo> processos = reuniao.getProcessos();
+
+            if(processos.size() > 1){
+                mv.setViewName("/reunioes/escolherprocessoparavotar");
+                mv.addObject("processos", processos);
+                return mv;
+            } else {
+                Processo processo = processos.get(0);
+                List<Professor> professoresdocolegiado = reuniao.getColegiado().getProfessores();
+                mv.addObject("processo", processo);
+                mv.addObject("professores", professoresdocolegiado);
+
+            }
+        }
+
+        return mv;
+    }
+
+    /*@PostMapping("/reuniao/iniciar")
     public ModelAndView iniciarReuniao(Integer idReuniao){
         reuniaoService.iniciarReuniao(idReuniao);
         return null;
-    }
+    }*/
+
     @PostMapping("/reuniao/encerrar")
     public ModelAndView encerrarReuniao(Integer idReuniao){
         reuniaoService.encerrarReuniao(idReuniao);
         return null;
+    }
+
+    @PostMapping("/contarvotos")
+    public String processarVotos(@ModelAttribute("votos") List<VotoDTO> votos) {
+        // Lógica para processar os votos
+        // ...
+        return "redirect:/pagina-de-sucesso";
     }
 }

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Detalhes do Processo</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    select {
+      padding: 5px;
+      margin-left: 10px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Detalhes do Processo</h1>
+<p>ID do Processo: <span th:text="${processo.id}"></span></p>
+<p>Aluno: <span th:text="${processo.aluno.nome}"></span></p>
+<p>Assunto: <span th:text="${processo.assunto.assunto}"></span></p>
+<p>Professor Relator: <span th:text="${processo.professor.nome}"></span></p>
+<p>Decisão do Professor Relator: <span th:text="${processo.parecer.tipoDecisao}"></span></p>
+
+<h2>Professores Membros do Colegiado que Votarão</h2>
+<form th:action="@{/processos/votar/professorcolegiado}" method="post">
+  <input type="hidden" th:name="processoId" th:value="${processo.id}" />
+
+  <ul>
+    <li th:each="professor : ${processo.reuniao.colegiado.professores}">
+      <span th:text="${professor.nome}"></span>
+
+      <!-- Modificado: Use o nome do professor para criar a array de votos -->
+      <select th:name="'votos[' + ${professor.nome} + ']'" id="opcaoVoto" name="opcaoVoto">
+        <option value="COM_RELATOR">Com Relator</option>
+        <option value="DIVERGENTE">Divergente</option>
+      </select>
+    </li>
+  </ul>
+
+  <button type="submit">Votar</button>
+</form>
+
+</body>
+</html>
