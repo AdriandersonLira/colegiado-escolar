@@ -60,6 +60,14 @@
                     </li>
                 </ul>
             </div>
+
+            <form class="form-inline my-3 my-lg-0" th:action="@{/auth/logout}" method="POST">
+                 <span sec:authorize="isAuthenticated()" sec:authentication="name"
+                       style="margin-right: 10px; font-size: 1em; color: #fff; text-transform: capitalize;"></span>
+                 <button type="submit" class="btn btn-danger my-2 my-sm-0">
+                     <i class="fa-solid fa-arrow-right-from-bracket"  style="margin-right: 7px;"></i> Sair
+                 </button>
+            </form>
         </div>
     </nav>
     <div class="container mt-5">
