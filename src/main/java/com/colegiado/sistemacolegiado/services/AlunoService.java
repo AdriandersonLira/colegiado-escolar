@@ -5,6 +5,8 @@ import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
 import com.colegiado.sistemacolegiado.repositories.AlunoRepositorio;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,10 @@ public class AlunoService {
 
     public List<Aluno> listarAlunos(){
         return  alunoRepository.findAll();
+    }
+
+    public Page<Aluno> listarAlunosPagination(Pageable paging){
+        return  alunoRepository.findAll(paging);
     }
 
     public void deletarAluno(Aluno aluno){
