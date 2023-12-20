@@ -9,9 +9,15 @@ import com.colegiado.sistemacolegiado.models.dto.CriarAssuntoDTO;
 import com.colegiado.sistemacolegiado.models.dto.CriarColegiadoDTO;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
+import com.colegiado.sistemacolegiado.repositories.AlunoRepositorio;
 import com.colegiado.sistemacolegiado.services.AlunoService;
+import com.colegiado.sistemacolegiado.ui.NavPage;
+import com.colegiado.sistemacolegiado.ui.NavPageBuilder;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -95,11 +101,20 @@ public class AlunoController {
     }
 
     @GetMapping
-    public ModelAndView getAlunos(ModelAndView modelAndView) {
-        List<Aluno> alunos = alunoService.listarAlunos();
+    public ModelAndView getAlunos(
+            ModelAndView modelAndView,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "4") int size
+        ) {
+        Pageable paging = PageRequest.of(page-1, size);
+        Page<Aluno> pageAlunos = alunoService.listarAlunosPagination(paging);
 
+        NavPage navPage = NavPageBuilder.newNavPage(pageAlunos.getNumber() + 1,
+                pageAlunos.getTotalElements(), pageAlunos.getTotalPages(), size);
+
+        modelAndView.addObject("navPage", navPage);
+        modelAndView.addObject("alunos", pageAlunos);
         modelAndView.setViewName("alunos/index");
-        modelAndView.addObject("alunos", alunos);
         return modelAndView;
     }
 
