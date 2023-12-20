@@ -3,10 +3,12 @@ package com.colegiado.sistemacolegiado.services;
 import com.colegiado.sistemacolegiado.models.Aluno;
 import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.models.Professor;
+import com.colegiado.sistemacolegiado.models.User;
 import com.colegiado.sistemacolegiado.models.dto.ProfessorDTO;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
 import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ProfessorRepositorio;
+import com.colegiado.sistemacolegiado.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -23,6 +25,8 @@ import java.util.List;
 public class ProfessorService {
     final ProfessorRepositorio professorRepositorio;
     final ColegiadoRepositorio colegiadoRepositorio;
+    final UserRepository userRepository;
+
 
     @Transactional
     public Professor criarProfessor(UsuarioDTO professorDTO, Integer idcolegiado){
@@ -50,6 +54,10 @@ public class ProfessorService {
         return professorRepositorio.findAll();
     }
 
+    public List<User> findEnabledUsers() {
+        return userRepository.findByEnabledTrue();
+    }
+
     public void deletarProfessores(Professor professor){
         professorRepositorio.delete(professor);
     }
@@ -71,7 +79,7 @@ public class ProfessorService {
         professor.setFone(professorDTO.getFone());
         professor.setMatricula(professorDTO.getMatricula());
         professor.setLogin(professorDTO.getLogin());
-        professor.setSenha(professorDTO.getSenha());
+        professor.setUser(professorDTO.getUser());
         professor.setCoordenador(professorDTO.getCoordenador());
         return professorRepositorio.save(professor);
     }

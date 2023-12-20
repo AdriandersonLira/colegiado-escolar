@@ -1,6 +1,7 @@
 package com.colegiado.sistemacolegiado.models.dto;
 
 import com.colegiado.sistemacolegiado.models.Aluno;
+import com.colegiado.sistemacolegiado.models.User;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +18,7 @@ public class AlunoDTO {
     private String fone;
     private String matricula;
     private String login;
-    @NotEmpty(message = "senha é obrigatório")
-    private String senha;
+    private User user;
 
     public AlunoDTO (Aluno aluno){
         this.id = aluno.getId();
@@ -26,7 +26,7 @@ public class AlunoDTO {
         this.fone = aluno.getFone();
         this.matricula = aluno.getMatricula();
         this.login = aluno.getLogin();
-        this.senha = aluno.getSenha();
+        this.user = aluno.getUser();
     }
 
     public String toString(){
@@ -34,7 +34,6 @@ public class AlunoDTO {
                 "Nome: " + nome + "\n" +
                 "fone: " + fone + "\n" +
                 "matricula: " + matricula + "\n" +
-                "login: " + login + "\n" +
-                "senha: " + senha + "\n";
+                "login: " + login + "\n";
     }
 }

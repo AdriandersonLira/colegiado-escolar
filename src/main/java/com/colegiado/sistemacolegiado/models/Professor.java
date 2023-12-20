@@ -25,8 +25,8 @@ public class Professor extends Usuario{
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<Voto> votos;
 
-    public Professor(int id, String nome, String fone, String matricula, String login, String senha, boolean coordenador){
-        super(id, nome, fone, matricula, login, senha);
+    public Professor(int id, String nome, String fone, String matricula, String login, User user, boolean coordenador){
+        super(id, nome, fone, matricula, login, user);
         this.coordenador = coordenador;
         this.votos = new ArrayList<>();
     }
@@ -36,7 +36,7 @@ public class Professor extends Usuario{
         this.setFone(professorDTO.getFone());
         this.setMatricula(professorDTO.getMatricula());
         this.setLogin(professorDTO.getLogin());
-        this.setSenha(professorDTO.getSenha());
+        this.setUser(professorDTO.getUser());
         this.coordenador = professorDTO.getCoordenador();
     }
 

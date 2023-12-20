@@ -36,10 +36,14 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Senha</label>
-            <input class="form-control" th:errorclass="is-invalid" type="password" th:field="*{senha}" required>
-            <div class="invalid-feedback" th:errors="*{senha}"></div>
+            <label for="user" class="form-label">Usuário:</label>
+            <select th:field="*{user}" class="form-select" id="user">
+                <option th:each="u : ${users}" th:value="${u.username}" th:text="${u.username}"
+                        th:selected="${u.username==user}">
+                </option>
+            </select>
         </div>
+
 
         <button class="btn btn-primary" type="submit">Enviar</button>
         <a class="btn btn-outline-success" href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i>&nbsp;Voltar</a>

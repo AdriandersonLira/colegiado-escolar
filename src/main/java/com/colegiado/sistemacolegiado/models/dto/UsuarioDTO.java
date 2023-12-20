@@ -1,6 +1,7 @@
 package com.colegiado.sistemacolegiado.models.dto;
 
 import com.colegiado.sistemacolegiado.models.Professor;
+import com.colegiado.sistemacolegiado.models.User;
 import com.colegiado.sistemacolegiado.models.Usuario;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
@@ -18,10 +19,12 @@ public class UsuarioDTO {
     private String fone;
     @NotEmpty(message = "matricula é obrigatório")
     private String matricula;
-    @NotEmpty(message = "login é obrigatório")
+    @NotEmpty(message = "email é obrigatório")
     private String login;
-    @NotEmpty(message = "senha é obrigatório")
-    private String senha;
+
+    @NotEmpty(message = "Selecion um user, é obrigatório")
+    private User user;
+
     private Boolean coordenador;
 
     @Override

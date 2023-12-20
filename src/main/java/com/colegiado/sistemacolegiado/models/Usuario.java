@@ -24,8 +24,10 @@ public abstract class Usuario {
     private String matricula;
     @Column (nullable = false, unique = true)
     private String login;
-    @Column (nullable = false)
-    private String senha;
+
+    @OneToOne
+    @JoinColumn(name = "username")
+    private User user;
 
     public String toString() {
 
@@ -33,8 +35,7 @@ public abstract class Usuario {
                 "Nome: " + nome + "\n" +
                 "fone: " + fone + "\n" +
                 "matricula: " + matricula + "\n" +
-                "login: " + login + "\n" +
-                "senha: " + senha + "\n";
+                "login: " + login + "\n";
     }
 }
 

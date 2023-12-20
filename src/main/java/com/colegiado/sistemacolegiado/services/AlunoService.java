@@ -2,8 +2,10 @@ package com.colegiado.sistemacolegiado.services;
 
 import com.colegiado.sistemacolegiado.models.Aluno;
 import com.colegiado.sistemacolegiado.models.Colegiado;
+import com.colegiado.sistemacolegiado.models.User;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
 import com.colegiado.sistemacolegiado.repositories.AlunoRepositorio;
+import com.colegiado.sistemacolegiado.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +18,13 @@ import java.util.Optional;
 public class AlunoService {
 
     final AlunoRepositorio alunoRepository;
+    final UserRepository userRepository;
 
 
-    public AlunoService (AlunoRepositorio alunoRepository){
+
+    public AlunoService (AlunoRepositorio alunoRepository, UserRepository userRepository){
         this.alunoRepository = alunoRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -37,6 +42,10 @@ public class AlunoService {
 
     public Page<Aluno> listarAlunosPagination(Pageable paging){
         return  alunoRepository.findAll(paging);
+    }
+
+    public List<User> findEnabledUsers() {
+        return userRepository.findByEnabledTrue();
     }
 
     public void deletarAluno(Aluno aluno){
@@ -62,7 +71,7 @@ public class AlunoService {
         aluno.setFone(alunoDTO.getFone());
         aluno.setMatricula(alunoDTO.getMatricula());
         aluno.setLogin(alunoDTO.getLogin());
-        aluno.setSenha(alunoDTO.getSenha());
+        aluno.setUser(alunoDTO.getUser());
         return alunoRepository.save(aluno);
     }
 
