@@ -21,6 +21,7 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Telefone</th>
                     <th scope="col">Matrícula</th>
+                    <th scope="col">Usuário</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -31,6 +32,7 @@
                     <td class="col-3" th:text="${aluno.nome}">Nome do Aluno</td>
                     <td class="col-3" th:text="${aluno.fone}">Telefone</td>
                     <td class="col-3" th:text="${aluno.matricula.toString()}">Matrícula</td>
+                    <td class="col-3" th:text="${aluno.user != null ? aluno.user.username : 'Sem usuário'}">Usuário</td>
                     <td class="col-1">
                         <a class="btn btn-outline-warning" th:href="@{/alunos/{value}/edit(value = ${aluno.id})}"><i class="fa-solid fa-pen"></i></a>
                     </td>

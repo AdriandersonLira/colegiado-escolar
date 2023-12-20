@@ -1,9 +1,6 @@
 package com.colegiado.sistemacolegiado.controllers;
 
-import com.colegiado.sistemacolegiado.models.Aluno;
-import com.colegiado.sistemacolegiado.models.Assunto;
-import com.colegiado.sistemacolegiado.models.Colegiado;
-import com.colegiado.sistemacolegiado.models.Processo;
+import com.colegiado.sistemacolegiado.models.*;
 import com.colegiado.sistemacolegiado.models.dto.AlunoDTO;
 import com.colegiado.sistemacolegiado.models.dto.CriarAssuntoDTO;
 import com.colegiado.sistemacolegiado.models.dto.CriarColegiadoDTO;
@@ -204,8 +201,11 @@ public class AlunoController {
 
         ModelAndView mv = new ModelAndView("alunos/index");
 
-        System.out.println("oiiii");
-
         return mv;
+    }
+
+    @ModelAttribute("users")
+    public List<User> getUserOptions() {
+        return alunoService.findEnabledUsers();
     }
 }

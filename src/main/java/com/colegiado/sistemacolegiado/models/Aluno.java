@@ -14,8 +14,8 @@ public class Aluno extends Usuario{
 
     public Aluno(){
     }
-    public Aluno(int id, String nome, String fone, String matricula, String login, String senha){
-        super(id, nome, fone, matricula, login, senha);
+    public Aluno(int id, String nome, String fone, String matricula, String login, User user){
+        super(id, nome, fone, matricula, login, user);
     }
     @OneToMany (mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Processo> processos;
@@ -25,7 +25,7 @@ public class Aluno extends Usuario{
         this.setFone(alunoDTO.getFone());
         this.setMatricula(alunoDTO.getMatricula());
         this.setLogin(alunoDTO.getLogin());
-        this.setSenha(alunoDTO.getSenha());
+        this.setUser(alunoDTO.getUser());
     }
 
     public void setProcessoDoAluno (Processo processo){

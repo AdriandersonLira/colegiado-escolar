@@ -1,10 +1,7 @@
 package com.colegiado.sistemacolegiado.controllers;
 
 
-import com.colegiado.sistemacolegiado.models.Aluno;
-import com.colegiado.sistemacolegiado.models.Colegiado;
-import com.colegiado.sistemacolegiado.models.Processo;
-import com.colegiado.sistemacolegiado.models.Professor;
+import com.colegiado.sistemacolegiado.models.*;
 import com.colegiado.sistemacolegiado.models.dto.AlunoDTO;
 import com.colegiado.sistemacolegiado.models.dto.ProfessorDTO;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
@@ -222,5 +219,10 @@ public class ProfessorController {
     @ResponseStatus(HttpStatus.OK)
     public Professor buscaProfessor(@PathVariable Integer id){
         return professorService.encontrarPorId(id);
+    }
+
+    @ModelAttribute("users")
+    public List<User> getUserOptions() {
+        return professorService.findEnabledUsers();
     }
 }
