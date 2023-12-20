@@ -56,9 +56,11 @@
                             </div>
                         </div>
                     </td>
-                    <td class="col-1">
-                        <a class="btn btn-outline-warning" th:href="@{'/alunos/cadastrarprocesso/' + ${aluno.id}}"><i class="fa-solid fa-chalkboard-user fa-beat-fade"></i></a>
+
+                    <td>
+                        <a class="btn btn-outline-warning" th:href="@{'/alunos/processocadastro/' + ${aluno.id}}"><i class="fa-solid fa-file"></i></a>
                     </td>
+
                     <td>
                         <a class="btn btn-outline-warning" th:href="@{'/alunos/listarprocesso/' + ${aluno.id}}"><i class="fa-solid fa-list"></i></a>
                     </td>

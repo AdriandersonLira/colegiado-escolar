@@ -147,38 +147,32 @@ public class ReuniaoController {
     }
 
     @GetMapping("/iniciar-reuniao/{id}")
-    public ModelAndView iniciarReuniao(@PathVariable Integer id){
+    public ModelAndView iniciarReuniao(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView("reunioes/iniciodareuniao");
 
         List<Reuniao> reunioes = reuniaoService.listarReunioes();
         boolean reuniaoIniciada = false;
 
-
-        for (Reuniao reuniao : reunioes){
-            if(reuniao.getStatus().equals(StatusReuniao.INICIADA)){
+        for (Reuniao reuniao : reunioes) {
+            if (reuniao.getStatus().equals(StatusReuniao.INICIADA)) {
                 reuniaoIniciada = true;
 
                 if (!Objects.equals(reuniao.getId(), id)) {
-                    RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
                     redirectAttributes.addFlashAttribute("error", true);
                     redirectAttributes.addFlashAttribute("message", "A reunião já foi iniciada. Não é possível iniciar outra reunião.");
-
-                    mv.setViewName("reunioes/listarreunioes");
-                    mv.addObject("reunioes", reunioes);
-                    return mv;
+                    return new ModelAndView("redirect:/reunioes/listarreunioes");
                 }
             }
-
         }
 
         Optional<Reuniao> reuniaoOptional = reuniaoService.encontrarPorId(id);
 
-        if(reuniaoOptional.isPresent()){
+        if (reuniaoOptional.isPresent()) {
             Reuniao reuniao = reuniaoOptional.get();
             reuniaoService.iniciarReuniao(id);
             List<Processo> processos = reuniao.getProcessos();
 
-            if(processos.size() > 1){
+            if (processos.size() > 1) {
                 mv.setViewName("/reunioes/escolherprocessoparavotar");
                 mv.addObject("processos", processos);
                 return mv;
@@ -187,7 +181,6 @@ public class ReuniaoController {
                 List<Professor> professoresdocolegiado = reuniao.getColegiado().getProfessores();
                 mv.addObject("processo", processo);
                 mv.addObject("professores", professoresdocolegiado);
-
             }
         }
 

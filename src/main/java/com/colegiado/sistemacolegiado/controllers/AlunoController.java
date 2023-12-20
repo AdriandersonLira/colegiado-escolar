@@ -2,12 +2,10 @@ package com.colegiado.sistemacolegiado.controllers;
 
 import com.colegiado.sistemacolegiado.models.*;
 import com.colegiado.sistemacolegiado.models.dto.AlunoDTO;
-import com.colegiado.sistemacolegiado.models.dto.CriarAssuntoDTO;
-import com.colegiado.sistemacolegiado.models.dto.CriarColegiadoDTO;
 import com.colegiado.sistemacolegiado.models.dto.UsuarioDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
-import com.colegiado.sistemacolegiado.repositories.AlunoRepositorio;
 import com.colegiado.sistemacolegiado.services.AlunoService;
+import com.colegiado.sistemacolegiado.services.AssuntoService;
 import com.colegiado.sistemacolegiado.ui.NavPage;
 import com.colegiado.sistemacolegiado.ui.NavPageBuilder;
 import jakarta.servlet.http.HttpSession;
@@ -17,17 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,9 +28,11 @@ import java.util.stream.Collectors;
 public class AlunoController {
 
     final AlunoService alunoService;
+    final AssuntoService assuntoService;
 
-    public AlunoController(AlunoService alunoService) {
+    public AlunoController(AlunoService alunoService, AssuntoService assuntoService) {
         this.alunoService = alunoService;
+        this.assuntoService = assuntoService;
     }
 
     @PostMapping
@@ -158,7 +153,6 @@ public class AlunoController {
         return modelAndView;
     }
 
-
     @GetMapping("/{id}/delete")
     public ModelAndView deletarAluno(ModelAndView modelAndView, @PathVariable (value = "id") int id, RedirectAttributes attr){
         try {
@@ -176,14 +170,18 @@ public class AlunoController {
         return modelAndView;
     }
 
-    @GetMapping("/cadastrarprocesso/{id}")
-    public ModelAndView cadastrarprocesso(@PathVariable int id, RedirectAttributes attr, HttpSession session){
-        ModelAndView mv = new ModelAndView("redirect:/assuntos/new");
+    @GetMapping("/cadastrarprocesso/{alunoId}")
+    public ModelAndView cadastrarprocesso(@PathVariable int alunoId, RedirectAttributes attr){
+        ModelAndView mv = new ModelAndView("redirect:/alunos/cadastrarprocesso");
         try{
-            Aluno aluno = alunoService.encontrarPorId(id);
-            session.setAttribute("aluno", aluno);
-            System.out.println("oiiii");
-            System.out.println(aluno);
+            Aluno aluno = alunoService.encontrarPorId(alunoId);
+            List<Assunto> assuntos = assuntoService.listarAssuntos();
+
+            mv.addObject("alunoId", aluno.getId());  // Adicione o ID do aluno ao modelo
+            mv.addObject("alunoNome", aluno.getNome());  // Adicione o nome do aluno ao modelo
+            mv.addObject("assuntos", assuntos);
+            /*System.out.println("oiiii");
+            System.out.println(aluno);*/
 
 
 
@@ -196,10 +194,37 @@ public class AlunoController {
         return mv;
     }
 
+    @GetMapping("/processocadastro/{id}")
+    public ModelAndView processocadastro(@PathVariable int id){
+        ModelAndView mv = new ModelAndView("alunos/cadastraprocesso");
+        try{
+            Aluno aluno = alunoService.encontrarPorId(id);
+            List<Assunto> assuntos = assuntoService.listarAssuntos();
+
+            mv.addObject("alunoId", aluno.getId());  // Adicione o ID do aluno ao modelo
+            mv.addObject("aluno", aluno);  // Adicione o nome do aluno ao modelo
+            mv.addObject("assuntos", assuntos);
+            /*System.out.println("oiiii");
+            System.out.println(aluno);*/
+
+
+
+
+        }catch (Exception e) {
+            /*attr.addFlashAttribute("message", "Error: "+e);
+            attr.addFlashAttribute("error", "true");*/
+            mv.setViewName("redirect:/alunos");
+        }
+        return mv;
+    }
+
+
+
     @PostMapping("/cadastrarprocesso/{id}")
     public ModelAndView cadastrarProcessoAluno (@PathVariable int id){
 
-        ModelAndView mv = new ModelAndView("alunos/index");
+        ModelAndView mv = new ModelAndView("alunos/cadastrarprocesso");
+        alunoService.encontrarPorId(id);
 
         return mv;
     }

@@ -19,8 +19,11 @@ public class Assunto {
 
     String assunto;
 
-    public Assunto(CriarAssuntoDTO assunto) {
-        this.assunto = assunto.getAssunto();
+    private String descricao;  // Novo campo de descrição
+
+    public Assunto(CriarAssuntoDTO assuntoDTO) {
+        this.assunto = assuntoDTO.getAssunto();
+        this.descricao = assuntoDTO.getDescricao();  // Inicializar o novo campo de descrição
     }
 
     public void setAssunto(String Assunto){

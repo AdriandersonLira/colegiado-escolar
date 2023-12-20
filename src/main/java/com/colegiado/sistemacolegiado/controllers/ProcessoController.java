@@ -10,10 +10,7 @@ import com.colegiado.sistemacolegiado.models.dto.ProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.models.enums.TipoDecisao;
-import com.colegiado.sistemacolegiado.services.AlunoService;
-import com.colegiado.sistemacolegiado.services.ColegiadoService;
-import com.colegiado.sistemacolegiado.services.ProcessoService;
-import com.colegiado.sistemacolegiado.services.ProfessorService;
+import com.colegiado.sistemacolegiado.services.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +34,7 @@ public class ProcessoController {
     final ColegiadoService colegiadoService;
     final ProfessorService professorService;
     final AlunoService alunoService;
+    final AssuntoService assuntoService;
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -116,16 +114,20 @@ public class ProcessoController {
         return mv;
     }
 
-    @GetMapping("/criarprocesso/aluno")
-    public ModelAndView criarprocessoaluno(HttpSession session){
+    @PostMapping("/criarprocesso/aluno")
+    public ModelAndView criarprocessoaluno(@RequestParam("alunoId") int alunoId,
+                                           @RequestParam("idAssunto") int idAssunto){
         ModelAndView mv = new ModelAndView("alunos/listarprocessoaluno");
-        Aluno aluno = (Aluno) session.getAttribute("aluno");
-        Assunto assunto = (Assunto) session.getAttribute("assunto");
+
+        //Aluno aluno = (Aluno) session.getAttribute("aluno");
+        //Assunto assunto = (Assunto) session.getAttribute("assunto");
+
+        Aluno aluno = alunoService.encontrarPorId(alunoId);
+        Assunto assunto = assuntoService.encontrarPorId(idAssunto);
 
 
-
-        System.out.println(aluno);
-        System.out.println(assunto);
+        //System.out.println(aluno);
+        //System.out.println(assunto);
 
         CriarProcessoDTO processoDTO = new CriarProcessoDTO(assunto.getAssunto(), assunto.getId(), aluno.getId());
         Processo processo = processoService.criarProcesso(processoDTO);

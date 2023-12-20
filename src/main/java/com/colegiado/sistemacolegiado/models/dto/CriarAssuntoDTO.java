@@ -15,6 +15,7 @@ import lombok.Setter;
 public class CriarAssuntoDTO {
     private int id;
     private String assunto;
+    private String descricao;
 
     public CriarAssuntoDTO (Assunto assunto){
         this.id = assunto.getId();

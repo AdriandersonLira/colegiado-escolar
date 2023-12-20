@@ -17,6 +17,12 @@
             <div class="invalid-feedback" th:errors="*{assunto}"></div>
         </div>
 
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea class="form-control" th:errorclass="is-invalid" th:field="*{descricao}" id="descricao" rows="4"></textarea>
+            <div class="invalid-feedback" th:errors="*{descricao}"></div>
+        </div>
+
         <button class="btn btn-primary" type="submit">Enviar</button>
         <a class="btn btn-outline-success" href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i>&nbsp;Voltar</a>
     </form>

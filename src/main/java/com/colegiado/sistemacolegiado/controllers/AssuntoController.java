@@ -96,13 +96,13 @@ public class AssuntoController {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("assuntos/new");
         } else {
-            Aluno aluno = (Aluno) session.getAttribute("aluno");
-            System.out.println(aluno);
+            /*Aluno aluno = (Aluno) session.getAttribute("aluno");
+            System.out.println(aluno);*/
             Assunto assunto = assuntoService.criarAssunto(assuntoDTO);
-            session.setAttribute("assunto", assunto);
+            //session.setAttribute("assunto", assunto);
             attr.addFlashAttribute("message", "Assunto cadastrado com sucesso!");
             attr.addFlashAttribute("error", "false");
-            modelAndView.setViewName("redirect:/processos/criarprocesso/aluno");
+            modelAndView.setViewName("redirect:/assuntos");
         }
 
         return modelAndView;
