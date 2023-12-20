@@ -93,6 +93,7 @@ public class ProcessoController {
             e.printStackTrace();
             attr.addFlashAttribute("message", "Error: " + e.getMessage());
             attr.addFlashAttribute("error", "true");
+            modelAndView.setViewName("redirect:/processos");
         }
 
         modelAndView.setViewName("redirect:/processos");

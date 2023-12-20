@@ -5,7 +5,7 @@
 <header th:replace="~{layouts :: header('Listagem de Processos')}"></header>
 
 <div class="container mt-4 mb-5">
-    <form th:action="@{/processos/filtrar}" method="get">
+    <!--<form th:action="@{/processos/filtrar}" method="get">
         <label for="nomeFilter">Nome:</label>
         <input type="text" id="nomeFilter" name="nomeFilter">
 
@@ -13,7 +13,7 @@
         <input type="date" id="dataFilter" name="dataFilter">
 
         <button type="submit">Filtrar</button>
-    </form>
+    </form>-->
     <div class="row">
         <div role="alert" class="alert d-flex align-items-center alert-dismissible fade show" th:if="${message ne null}" th:classappend="${error ? 'alert-danger' : 'alert-success'}">
             <i class="me-2" th:classappend="${error ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-check'}"></i>
@@ -38,10 +38,14 @@
                     <th class="col-1" scope="row" th:text="${processo.getId()}">ID</th>
                     <td class="col-1" th:text="${processo.requerimento}">Requerimento</td>
                     <td class="col-1" th:text="${processo.aluno?.getNome()}">Id Aluno</td>
-                    <td class="col-3" th:text="${processo.professor != null ? processo.professor.nome : ''}">Professor</td>
-                    <td class="col-1" th:text="${processo.parecer != null ? processo.parecer.getTipoDecisao() : ''}">Parecer</td>
+                    <td class="col-1" th:text="${processo.professor != null ? processo.professor.nome : ''}">Professor</td>
+                    <td class="col-2">
+                        <span th:if="${processo.getStatus() == 'Julgado'}" th:text="${processo.getDecisao()}" class="d-inline-block">Parecer</span>
+                        <span th:unless="${processo.getStatus() == 'Julgado'}" class="d-inline-block text-muted">N/A</span>
+                    </td>
                     <td class="col-3" th:text="${#temporals.format(processo.dataRecepcao, 'dd/MM/yyyy')}">Data de Recebimento</td>
                     <td class="col-3" th:text="${#temporals.format(processo.dataDistribuicao, 'dd/MM/yyyy')}">Data de Distribuição</td>
+
 
 
                 </tr>

@@ -66,6 +66,7 @@
                     <th scope="col">Professor</th>
                     <th scope="col">Requerimento</th>
                     <th scope="col">Ação</th>
+                    <th scope="col">Finalizar Seção</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -97,6 +98,15 @@
                                 </a>
                             </span>
                         </span>
+                    </td>
+
+                    <td class="col-1">
+                        <form th:action="@{/reunioes/reuniao/encerrar}" method="post">
+                            <input type="hidden" th:name="idReuniao" th:value="${reuniao.id}" />
+                            <button type="submit" class="btn btn-outline-warning">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
