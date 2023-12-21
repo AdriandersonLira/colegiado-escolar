@@ -66,6 +66,45 @@ public interface ProcessoRepositorio extends JpaRepository<Processo, Integer> {
             "WHERE prof.colegiado.id = :colegiadoId")
     List<Processo> filtrarProcessosDoColegiado(@Param("colegiadoId") Integer colegiadoId);
 
+    @Query("SELECT p FROM Processo p WHERE p.professor.colegiado.id = :colegiadoId")
+    List<Processo> filtrarprocessocolegiado (@Param("colegiadoId") Integer colegiadoId);
+
+    @Query("SELECT p FROM Processo p " +
+            "JOIN p.aluno a " +
+            "WHERE (:colegiadoId IS NULL OR p.professor.colegiado.id = :colegiadoId) " +
+            "AND (:alunoId IS NULL OR a.id = :alunoId)")
+    List<Processo> filtrarPorColegiadoEAluno(@Param("colegiadoId") Integer colegiadoId, @Param("alunoId") Integer alunoId);
+
+    // Consulta personalizada para filtrar por colegiado e professor
+    @Query("SELECT p FROM Processo p WHERE p.professor.colegiado.id = :colegiadoId AND p.professor.id = :professorId")
+    List<Processo> filtrarPorColegiadoEProfessor(@Param("colegiadoId") Integer colegiadoId, @Param("professorId") Integer professorId);
+
+    @Query("SELECT p FROM Processo p WHERE p.professor.colegiado.id = :colegiadoId " +
+            "AND p.aluno.id = :alunoId " +
+            "AND p.professor.id = :professorId")
+    List<Processo> filtrarPorColegiadoAlunoEProfessor(
+            @Param("colegiadoId") Integer colegiadoId,
+            @Param("alunoId") Integer alunoId,
+            @Param("professorId") Integer professorId);
+
+    @Query("SELECT p FROM Processo p " +
+            "LEFT JOIN p.aluno a " +
+            "LEFT JOIN p.professor prof " +
+            "WHERE (:colegiadoId IS NULL OR prof.colegiado.id = :colegiadoId) " +
+            "AND (:alunoId IS NULL OR a.id = :alunoId) " +
+            "AND (:professorId IS NULL OR prof.id = :professorId) " +
+            "AND (:statusId IS NULL OR p.status = :statusId)")
+    List<Processo> filtrarProcessostodos(
+            @Param("colegiadoId") Integer colegiadoId,
+            @Param("alunoId") Integer alunoId,
+            @Param("professorId") Integer professorId,
+            @Param("statusId") StatusProcesso statusId
+    );
+
+    @Query("SELECT p FROM Processo p WHERE (:statusId IS NULL OR p.status = :statusId) " +
+            "AND (:colegiadoId IS NULL OR p.professor.colegiado.id = :colegiadoId)")
+    List<Processo> filtrarprocessoPorStatusEColegiado(@Param("statusId") StatusProcesso statusId, @Param("colegiadoId") Integer colegiadoId);
+
 
 
 

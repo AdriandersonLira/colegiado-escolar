@@ -198,6 +198,28 @@ public class ProcessoService {
         return processoRepositorio.findAll();
     }
 
+    public List<Processo> filtraporcolegiado (Integer colegiadoId, Integer alunoId, Integer professorId, StatusProcesso statusProcesso){
+        if(colegiadoId != null && alunoId != null && professorId != null && statusProcesso != null){
+            return processoRepositorio.filtrarProcessostodos(colegiadoId, alunoId, professorId, statusProcesso);
+        } else if (colegiadoId != null && statusProcesso != null) {
+            return  processoRepositorio.filtrarprocessoPorStatusEColegiado(statusProcesso, colegiadoId);
+
+        } else if (colegiadoId != null && alunoId != null && professorId != null) {
+            // Ambos os parâmetros foram fornecidos, chame a consulta personalizada
+            return processoRepositorio.filtrarPorColegiadoAlunoEProfessor(colegiadoId, alunoId, professorId);
+        } else if (colegiadoId != null && alunoId != null) {
+            return processoRepositorio.filtrarPorColegiadoEAluno(colegiadoId, alunoId);
+        } else if (colegiadoId != null && professorId != null) {
+            return processoRepositorio.filtrarPorColegiadoEProfessor(colegiadoId, professorId);
+        } else if (colegiadoId != null) {
+            // Somente colegiadoId foi fornecido, chame a consulta por colegiado
+            return processoRepositorio.filtrarprocessocolegiado(colegiadoId);
+        } else {
+            // Nenhum parâmetro foi fornecido, retorne a lista completa de processos
+            return listarProcessos();
+        }
+    }
+
     public void processarVotos(int processoId, Map<String, String> votos) {
         Processo processo = processoRepositorio.findById(processoId).orElseThrow(() -> new EntityNotFoundException("Processo não encontrado"));
         processo.setStatus(StatusProcesso.JULGADO);

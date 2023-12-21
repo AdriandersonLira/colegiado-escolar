@@ -252,36 +252,32 @@ public class ProcessoController {
         return mv;
     }
 
-    @GetMapping("/filtrar")
-    public ModelAndView listarProcessosFiltrados(
-            @RequestParam(name = "colegiadoFilter", required = false) Integer colegiadoId,
-            @RequestParam(name = "statusFilter", required = false) String statusFilter,
-            @RequestParam(name = "alunoFilter", required = false) String alunoFilter,
-            @RequestParam(name = "professorFilter", required = false) String professorFilter
-            ) {
-
+    @GetMapping("/listarPorColegiado")
+    public ModelAndView listarPorColegiado() {
         ModelAndView mv = new ModelAndView("processos/telacoordenadorverprocessosdocolegiado");
-
         List<Colegiado> colegiados = colegiadoService.listarColegiado();
         List<Aluno> alunos = alunoService.listarAlunos();
         List<Professor> professores = professorService.listarProfessores();
+       mv.addObject("colegiados", colegiados);
+        mv.addObject("alunos", alunos);
+        mv.addObject("professores", professores);
+        mv.addObject("Statusprocesso", StatusProcesso.values());
+        return mv;
+    }
 
-
-        // Lógica para obter os processos filtrados do serviço
-        List<Processo> processos = processoService.filtraprocessosdeumcolegiado(colegiadoId, statusFilter, alunoFilter, professorFilter);
-
-        System.out.println(processos);
-
-        // Adicionar os processos ao modelo para serem exibidos na página
+    @GetMapping("/porColegiado")
+    public ModelAndView filtrarPorColegiado(@RequestParam(name = "colegiadoId", required = false) Integer colegiadoId,  @RequestParam(name = "alunoId", required = false) Integer alunoId, @RequestParam(name = "professorId", required = false) Integer professorId, @RequestParam(name = "statusId", required = false) StatusProcesso statusId) {
+        ModelAndView mv = new ModelAndView("processos/telacoordenadorverprocessosdocolegiado");
+        List<Processo> processos = processoService.filtraporcolegiado(colegiadoId, alunoId, professorId, statusId);
+        List<Colegiado> colegiados = colegiadoService.listarColegiado();
+        List<Professor> professores = professorService.listarProfessores();
+        List<Aluno> alunos = alunoService.listarAlunos();
         mv.addObject("processos", processos);
 
-        // Adicione os valores dos filtros ao modelo para preencher o formulário
-
-
-        mv.addObject("statusProcesso", StatusProcesso.values());
         mv.addObject("colegiados", colegiados);
         mv.addObject("alunos", alunos);
         mv.addObject("professores", professores);
+        mv.addObject("Statusprocesso", StatusProcesso.values());
 
         return mv;
     }
