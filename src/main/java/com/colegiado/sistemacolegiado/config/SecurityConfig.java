@@ -30,6 +30,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/imagens/**").permitAll()
+                    .requestMatchers("/alunos/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
             .formLogin((form) -> form
                 .loginPage("/auth/login")
@@ -47,17 +48,33 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         // Alguns usuários básicos, criados quando da 1a. execução da aplicaçao
-        UserDetails sagan = User.withUsername("sagan").password(passwordEncoder().encode("cosmos")).roles("CLIENTE").build();
-        UserDetails turing = User.withUsername("turing").password(passwordEncoder().encode("enignma")).roles("CLIENTE").build();
-        UserDetails ada = User.withUsername("ada").password(passwordEncoder().encode("firstcoder")).roles("CLIENTE").build();
-        UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("CLIENTE", "ADMIN").build();
+        UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN", "COORDENADOR", "PROFESSOR", "ALUNO").build();
+
+        UserDetails candido = User.withUsername("candido").password(passwordEncoder().encode("candido@123")).roles("COORDENADOR", "PROFESSOR").build();
+
+        UserDetails fred = User.withUsername("fred").password(passwordEncoder().encode("fred@123")).roles("PROFESSOR").build();
+        UserDetails ada = User.withUsername("ada").password(passwordEncoder().encode("firstcoder")).roles("PROFESSOR").build();
+
+        UserDetails lira = User.withUsername("lira").password(passwordEncoder().encode("lira@123")).roles("ALUNO").build();
+        UserDetails samuel = User.withUsername("samuel").password(passwordEncoder().encode("samuel@123")).roles("ALUNO").build();
+        UserDetails gabriel = User.withUsername("gabriel").password(passwordEncoder().encode("gabriel@123")).roles("ALUNO").build();
+        UserDetails sagan = User.withUsername("sagan").password(passwordEncoder().encode("cosmos")).roles("ALUNO").build();
+        UserDetails turing = User.withUsername("turing").password(passwordEncoder().encode("enignma")).roles("ALUNO").build();
         // Evita duplicação dos usuários no banco
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-        if (!users.userExists(sagan.getUsername())) {
+        if (!users.userExists(admin.getUsername())) {
+            users.createUser(admin);
+
+            users.createUser(candido);
+
+            users.createUser(fred);
+            users.createUser(ada);
+
+            users.createUser(lira);
+            users.createUser(samuel);
+            users.createUser(gabriel);
             users.createUser(sagan);
             users.createUser(turing);
-            users.createUser(ada);
-            users.createUser(admin);
         }
         return users;
     }
