@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-<header th:replace="~{layouts :: header('Escolher processo para iniciar reunião')}"></header>
+<header th:replace="~{layouts :: header('Iniciar uma reunião')}"></header>
 
 <div class="container mt-4 mb-5">
     <div class="row">
@@ -60,11 +60,12 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Data</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Colegiado</th>
+                    <th scope="col">Status Reunião</th>
+                    <th scope="col">Colegiado Reunião</th>
                     <th scope="col">Aluno</th>
                     <th scope="col">Professor</th>
-                    <th scope="col">Requerimento</th>
+                    <th scope="col">Requerimento Processo</th>
+                    <th scope="col">Status Processo</th>
                     <th scope="col">Ação</th>
                     <th scope="col">Finalizar Seção</th>
                 </tr>
@@ -74,7 +75,7 @@
                     <td class="col-1" th:text="${reuniao.getId()}">ID</td>
                     <td class="col-2" th:text="${#temporals.format(reuniao.dataReuniao, 'dd/MM/yyyy')}">Data</td>
                     <td class="col-2" th:text="${reuniao.status}">Status</td>
-                    <td class="col-2" th:text="${reuniao.colegiado.curso}">Colegiado</td>
+                    <td class="col-2" th:text="${reuniao.colegiado.curso}">Colegiado Reunião</td>
                     <td class="col-2">
                         <span th:each="processo : ${reuniao.processos}">
                             <span th:text="${processo.aluno.getNome()}"></span>
@@ -90,9 +91,19 @@
                             <span th:text="${processo.requerimento}"></span>
                         </span>
                     </td>
+
+                    <td class="col-2">
+                        <span th:each="processo : ${reuniao.processos}">
+                            <span th:text="${processo.getStatus()}"></span>
+                        </span>
+                    </td>
+
                     <td class="col-1">
                         <span th:each="processo : ${reuniao.processos}">
-                            <span th:if="${processo.parecer != null}">
+                            <!-- Adicione logs para depuração -->
+                            <!--<span th:utext="${'Parecer: ' + processo.parecer + ', Status: ' + processo.getStatus()}"></span>-->
+
+                            <span th:unless="${processo.parecer == null or processo.getStatus() == 'Não pode ser alterado'}">
                                 <a class="btn btn-outline-warning" th:href="@{'/reunioes/iniciar-reuniao/' + ${reuniao.id}}">
                                     <i class="fa-solid fa-flag-checkered"></i>
                                 </a>

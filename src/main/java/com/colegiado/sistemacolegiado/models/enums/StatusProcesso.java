@@ -5,7 +5,8 @@ public enum StatusProcesso {
     DISTRIBUIDO("Distribuido"),
     EM_PAUTA("Em Pauta"),
     EM_JULGAMENTO("Em Julgamento"),
-    JULGADO("Julgado");
+    JULGADO("Julgado"),
+    NAO_PODE_SER_ALTERADO("Não pode ser alterado");
 
     private String status;
 

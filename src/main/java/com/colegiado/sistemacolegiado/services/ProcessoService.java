@@ -102,6 +102,7 @@ public class ProcessoService {
                 .orElseThrow(() -> new RuntimeException("Processo não encontrado"));
         processo.setParecer(decisaoRelator);
         processo.setJustificativa(texto);
+        processo.setStatus(StatusProcesso.EM_JULGAMENTO);
         return this.processoRepositorio.save(processo);
     }
 
@@ -182,6 +183,19 @@ public class ProcessoService {
         }
 
         return aluno.getProcessos();
+    }
+
+    public List<Processo> filtraprocessosdeumcolegiado (Integer colegiadoId, String statusFilter, String alunoFilter, String professorFilter){
+        if (colegiadoId != null && (statusFilter != null || alunoFilter != null || professorFilter != null)) {
+           /* return processoRepositorio.filtrarProcessos(
+                    colegiadoId, statusFilter, alunoFilter, professorFilter);*/
+        } else if (colegiadoId != null) {
+            return processoRepositorio.filtrarProcessosDoColegiado(colegiadoId);
+        } else {
+            return processoRepositorio.findAll();
+        }
+
+        return processoRepositorio.findAll();
     }
 
     public void processarVotos(int processoId, Map<String, String> votos) {

@@ -37,8 +37,10 @@
                     <td class="col-3" th:text="${#temporals.format(processo.dataRecepcao, 'dd/MM/yyyy')}">Data de Recebimento</td>
                     <td class="col-3" th:text="${#temporals.format(processo.dataDistribuicao, 'dd/MM/yyyy')}">Data de Distribuição</td>
 
-                    <td class="col-1">
-                        <a class="btn btn-outline-warning" th:href="@{/processos/votar/{id}(id=${processo.id})}"><i class="fa-solid fa-check-to-slot"></i></a>
+                    <td class="col-1" th:unless="${processo.getStatus() == 'Não pode ser alterado'}">
+                        <a class="btn btn-outline-warning" th:href="@{/processos/votar/{id}(id=${processo.id})}">
+                            <i class="fa-solid fa-check-to-slot"></i>
+                        </a>
                     </td>
 
                 </tr>

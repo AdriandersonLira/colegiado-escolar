@@ -74,6 +74,14 @@
                     </td>
                     <td th:remove="tag" th:unless="${professor.coordenador}"></td>
 
+                    <!-- Ícone de ver processos do colegiado -->
+                    <td class="col-1" th:if="${professor.coordenador}">
+                        <a class="btn btn-outline-info" th:href="@{/processos/telaconsultaprocessoscolegiado}">
+                            <i class="fa-solid fa-file"></i>
+                        </a>
+                    </td>
+                    <td th:remove="tag" th:unless="${professor.coordenador}"></td>
+
                     <!-- Ícone de Listar Reunião do Colegiado -->
                     <td class="col-1" th:if="${professor.colegiado != null}">
                         <a class="btn btn-outline-info" th:href="@{/reunioes/{id}/listreuniaocolegiado(id=${professor.id})}">

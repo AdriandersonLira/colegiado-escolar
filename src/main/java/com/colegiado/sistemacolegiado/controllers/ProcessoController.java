@@ -1,14 +1,12 @@
 package com.colegiado.sistemacolegiado.controllers;
 
-import com.colegiado.sistemacolegiado.models.Aluno;
-import com.colegiado.sistemacolegiado.models.Assunto;
-import com.colegiado.sistemacolegiado.models.Processo;
-import com.colegiado.sistemacolegiado.models.Professor;
+import com.colegiado.sistemacolegiado.models.*;
 import com.colegiado.sistemacolegiado.models.dto.CriarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.FiltrarProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.ProcessoDTO;
 import com.colegiado.sistemacolegiado.models.dto.VotoDTO;
 import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
+import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.models.enums.TipoDecisao;
 import com.colegiado.sistemacolegiado.services.*;
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -222,5 +221,72 @@ public class ProcessoController {
         // Redireciona de volta para a página de listagem de processos
         return mv;
     }
+
+    @GetMapping("/iniciar-reuniao/votacaoprocesso/{id}")
+    public ModelAndView iniciarvotacaoprocessodeumareuniao (@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        ModelAndView mv = new ModelAndView("reunioes/iniciodareuniao");
+
+        Optional<Processo> processoOptional = processoService.encontrarPorId(id);
+        if(processoOptional.isPresent()){
+            Processo processo = processoOptional.get();
+            List<Professor> professoresdocolegiado = processo.getProfessor().getColegiado().getProfessores();
+            mv.addObject("processo", processo);
+            mv.addObject("professores", professoresdocolegiado);
+
+        }
+        return mv;
+    }
+
+    @GetMapping("/telaconsultaprocessoscolegiado")
+    public ModelAndView telaconsultaprocessoscolegiado (){
+        ModelAndView mv = new ModelAndView("processos/telacoordenadorverprocessosdocolegiado");
+
+        //List<Processo> processos = processoService.listarProcessos();
+        List<Colegiado> colegiados = colegiadoService.listarColegiado();
+        List<Aluno> alunos = alunoService.listarAlunos();
+        List<Professor> professores = professorService.listarProfessores();
+
+        mv.addObject("statusProcesso", StatusProcesso.values());
+        mv.addObject("colegiados", colegiados);
+        mv.addObject("alunos", alunos);
+        mv.addObject("professores", professores);
+
+        return mv;
+    }
+
+    @GetMapping("/filtrar")
+    public ModelAndView listarProcessosFiltrados(
+            @RequestParam(name = "colegiadoFilter", required = false) Integer colegiadoId,
+            @RequestParam(name = "statusFilter", required = false) String statusFilter,
+            @RequestParam(name = "alunoFilter", required = false) String alunoFilter,
+            @RequestParam(name = "professorFilter", required = false) String professorFilter
+            ) {
+
+        ModelAndView mv = new ModelAndView("processos/telacoordenadorverprocessosdocolegiado");
+
+        List<Colegiado> colegiados = colegiadoService.listarColegiado();
+        List<Aluno> alunos = alunoService.listarAlunos();
+        List<Professor> professores = professorService.listarProfessores();
+
+
+        // Lógica para obter os processos filtrados do serviço
+        List<Processo> processos = processoService.filtraprocessosdeumcolegiado(colegiadoId, statusFilter, alunoFilter, professorFilter);
+
+        System.out.println(processos);
+
+        // Adicionar os processos ao modelo para serem exibidos na página
+        mv.addObject("processos", processos);
+
+        // Adicione os valores dos filtros ao modelo para preencher o formulário
+
+
+        mv.addObject("statusProcesso", StatusProcesso.values());
+        mv.addObject("colegiados", colegiados);
+        mv.addObject("alunos", alunos);
+        mv.addObject("professores", professores);
+
+        return mv;
+    }
+
 
 }

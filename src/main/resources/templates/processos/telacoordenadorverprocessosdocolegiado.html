@@ -1,0 +1,91 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts :: head('Lista de Reuniões')}"></head>
+<body>
+<header th:replace="~{layouts :: header('Listagem de Reuniões do Colegiado')}"></header>
+
+<div class="container mt-4 mb-5">
+    <form id="filtroForm" class="needs-validation" th:action="@{/processos/filtrar}" method="get" novalidate>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="colegiadoFilter" class="form-label">Filtrar por Colegiado:</label>
+                <select id="colegiadoFilter" name="colegiadoFilter" class="form-select">
+                    <option th:text="'-- Todos os Colegiados --'" th:value="${null}"></option>
+                    <option th:each="colegiado : ${colegiados}" th:value="${colegiado.id}" th:text="${colegiado.curso}"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="statusFilter" class="form-label">Filtrar por Status do Processo:</label>
+                <select id="statusFilter" name="statusFilter" class="form-select">
+                    <option th:text="'-- Nenhum Status --'" th:value="${null}"></option>
+                    <option th:each="status : ${statusProcesso}" th:value="${status}" th:text="${status.getStatuString()}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="alunoFilter" class="form-label">Filtrar por Aluno:</label>
+                <select id="alunoFilter" name="alunoFilter" class="form-select">
+                    <option th:text="'-- Todos os Alunos --'" th:value="${null}"></option>
+                    <option th:each="aluno : ${alunos}" th:value="${aluno.nome}" th:text="${aluno.nome}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="professorFilter" class="form-label">Filtrar por Professor:</label>
+                <select id="professorFilter" name="professorFilter" class="form-select">
+                    <option th:text="'-- Todos os Professores --'" th:value="${null}"></option>
+                    <option th:each="professor : ${professores}" th:value="${professor.nome}" th:text="${professor.nome}"></option>
+                </select>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary mt-3" onclick="filtrarProcessos()">Filtrar</button>
+    </form>
+
+    <div id="processosDiv" class="col-12 mt-4" style="display: none;">
+        <table class="table table-striped">
+            <!-- Cabeçalhos da tabela -->
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Data da Reunião</th>
+                <th scope="col">Status do Processo</th>
+                <th scope="col">Colegiado</th>
+                <th scope="col">Requerimento</th>
+                <!-- Adicione mais colunas conforme necessário -->
+            </tr>
+            </thead>
+
+            <!-- Corpo da tabela -->
+            <tbody id="processosBody">
+            <tr th:each="processo : ${processos}">
+                <th scope="row" th:text="${processo.id}">ID</th>
+                <td th:text="${processo.status}">Status do Processo</td>
+                <td th:text="${processo.professor?.colegiado?.curso} ?: 'N/A'">Colegiado</td>
+
+                <!-- Adicione mais colunas conforme necessário -->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+<script>
+    function filtrarProcessos() {
+        var colegiadoId = document.getElementById('colegiadoFilter').value;
+
+        if (colegiadoId) {
+            // Se um colegiado foi selecionado, faça a submissão do formulário
+            document.getElementById('filtroForm').submit();
+        } else {
+            // Caso contrário, mostre uma mensagem ou lógica adequada
+            alert('Selecione um colegiado para filtrar os processos.');
+        }
+    }
+</script>
+</body>
+</html>

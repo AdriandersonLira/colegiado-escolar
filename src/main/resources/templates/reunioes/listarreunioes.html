@@ -6,17 +6,13 @@
 
 <div class="container mt-4 mb-5">
     <div class="row">
-        <!-- Se houver uma mensagem de erro -->
-        <div th:if="${error}" class="alert alert-danger" role="alert">
-            <i class="fa-solid fa-circle-xmark me-2"></i>
+        <!-- Se houver uma mensagem de sucesso ou erro -->
+        <div role="alert" class="alert d-flex align-items-center alert-dismissible fade show" th:if="${message}">
+            <i class="me-2" th:classappend="${error ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-check'}"></i>
             <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <!-- Se houver uma mensagem de sucesso -->
-        <div th:if="${not error}" class="alert alert-success" role="alert">
-            <i class="fa-solid fa-circle-check me-2"></i>
-            <span th:text="${message}"></span>
-        </div>
         <div class="col-12">
             <table class="table table-striped">
                 <thead>
@@ -35,7 +31,7 @@
                     <th class="col-1" scope="row" th:text="${reuniao.getId()}">ID</th>
                     <td class="col-3" th:text="${#temporals.format(reuniao.dataReuniao, 'dd/MM/yyyy')}">Data</td>
                     <td class="col-3" th:text="${reuniao.status}">Status</td>
-                    <td class="col-3" th:text="${reuniao.colegiado.curso}">Status</td>
+                    <td class="col-3" th:text="${reuniao.colegiado.curso}">Colegiado</td>
                     <td class="col-3"> <span th:each="processo : ${reuniao.processos}" th:text="${processo.requerimento}"></span></td>
 
                     <!-- Adicione mais colunas conforme necessário -->

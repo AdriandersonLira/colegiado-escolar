@@ -3,6 +3,7 @@ package com.colegiado.sistemacolegiado.services;
 import com.colegiado.sistemacolegiado.models.Colegiado;
 import com.colegiado.sistemacolegiado.models.Processo;
 import com.colegiado.sistemacolegiado.models.Reuniao;
+import com.colegiado.sistemacolegiado.models.enums.StatusProcesso;
 import com.colegiado.sistemacolegiado.models.enums.StatusReuniao;
 import com.colegiado.sistemacolegiado.repositories.ColegiadoRepositorio;
 import com.colegiado.sistemacolegiado.repositories.ProcessoRepositorio;
@@ -26,6 +27,7 @@ public class ReuniaoService {
     public Reuniao criarReuniao(Reuniao reuniao, List<Processo> processos){
         for (Processo Tprocesso : processos){
             Tprocesso.setReuniao(reuniao);
+            Tprocesso.setStatus(StatusProcesso.EM_PAUTA);
             //reuniao.setProcesso(Tprocesso);
         }
 
@@ -135,8 +137,13 @@ public class ReuniaoService {
 
         if (reuniaoOptional.isPresent()) {
             Reuniao reuniao = reuniaoOptional.get();
-            if(reuniao.getStatus().equals(StatusReuniao.INICIADA)){
+            List<Processo> processos = reuniao.getProcessos();
+            if(reuniao.getStatus().equals(StatusReuniao.INICIADA) || reuniao.getStatus().equals(StatusReuniao.PROGRAMADA)){
                 reuniao.setStatus(StatusReuniao.ENCERRADA);
+                for(Processo processo : processos){
+                    processo.setStatus(StatusProcesso.NAO_PODE_SER_ALTERADO);
+                    processoRepositorio.save(processo);
+                }
                 reuniaoRepositorio.save(reuniao);
             }
         } else {

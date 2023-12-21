@@ -78,10 +78,11 @@ public class ReuniaoController {
             Reuniao reuniao = new Reuniao(colegiado, processos, StatusReuniao.PROGRAMADA, dataReuniao);
             reuniaoService.criarReuniao(reuniao, processos);
             attr.addFlashAttribute("message", "Reunião criada com sucesso!");
+            attr.addFlashAttribute("error", false); // Defina como falso para indicar sucesso
         } catch (RuntimeException e) {
             e.printStackTrace();
             attr.addFlashAttribute("message", "Error: " + e.getMessage());
-            attr.addFlashAttribute("error", "true");
+            attr.addFlashAttribute("error", true); // Mantenha como verdadeiro para indicar erro
         }
         return new ModelAndView("redirect:/reunioes");
     }
@@ -160,7 +161,8 @@ public class ReuniaoController {
                 if (!Objects.equals(reuniao.getId(), id)) {
                     redirectAttributes.addFlashAttribute("error", true);
                     redirectAttributes.addFlashAttribute("message", "A reunião já foi iniciada. Não é possível iniciar outra reunião.");
-                    return new ModelAndView("redirect:/reunioes/listarreunioes");
+                    mv.addObject("reunioes", reunioes);
+                    return new ModelAndView("redirect:/reunioes");
                 }
             }
         }

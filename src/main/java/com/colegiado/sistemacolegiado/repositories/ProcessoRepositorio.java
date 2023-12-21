@@ -50,4 +50,23 @@ public interface ProcessoRepositorio extends JpaRepository<Processo, Integer> {
     @Query ("select p from Processo p where p.aluno.nome LIKE %:nome% AND p.dataRecepcao = :datarecepcao")
     List<Processo> filtrarNomeEData (@Param("nome") String nome, @Param("datarecepcao")LocalDate data);
 
+
+    /*@Query("SELECT p FROM Processo p WHERE p.colegiado.id = :colegiadoId " +
+            "AND (:statusFilter IS NULL OR p.status = :statusFilter) " +
+            "AND (:alunoFilter IS NULL OR p.aluno.nome = :alunoFilter) " +
+            "AND (:professorFilter IS NULL OR p.professor.nome = :professorFilter)")
+    List<Processo> filtrarProcessos(
+            @Param("colegiadoId") Integer colegiadoId,
+            @Param("statusFilter") String statusFilter,
+            @Param("alunoFilter") String alunoFilter,
+            @Param("professorFilter") String professorFilter);*/
+
+    @Query("SELECT DISTINCT p FROM Professor prof " +
+            "JOIN prof.processos p " + // Adicionei um espaço aqui
+            "WHERE prof.colegiado.id = :colegiadoId")
+    List<Processo> filtrarProcessosDoColegiado(@Param("colegiadoId") Integer colegiadoId);
+
+
+
+
 }

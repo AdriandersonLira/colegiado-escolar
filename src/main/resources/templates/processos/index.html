@@ -29,6 +29,7 @@
                     <th scope="col">Aluno</th>
                     <th scope="col">Professor</th>
                     <th scope="col">Parecer</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Data de Recebimento</th>
                     <th scope="col">Data de Distribuição</th>
                 </tr>
@@ -37,12 +38,14 @@
                 <tr th:each="processo : ${processos}">
                     <th class="col-1" scope="row" th:text="${processo.getId()}">ID</th>
                     <td class="col-1" th:text="${processo.requerimento}">Requerimento</td>
-                    <td class="col-1" th:text="${processo.aluno?.getNome()}">Id Aluno</td>
+                    <td class="col-1" th:text="${processo.aluno?.getNome()}">Aluno</td>
                     <td class="col-1" th:text="${processo.professor != null ? processo.professor.nome : ''}">Professor</td>
                     <td class="col-2">
                         <span th:if="${processo.getStatus() == 'Julgado'}" th:text="${processo.getDecisao()}" class="d-inline-block">Parecer</span>
                         <span th:unless="${processo.getStatus() == 'Julgado'}" class="d-inline-block text-muted">N/A</span>
                     </td>
+                    <td class="col-1" th:text="${processo.getStatus()}">Status</td>
+
                     <td class="col-3" th:text="${#temporals.format(processo.dataRecepcao, 'dd/MM/yyyy')}">Data de Recebimento</td>
                     <td class="col-3" th:text="${#temporals.format(processo.dataDistribuicao, 'dd/MM/yyyy')}">Data de Distribuição</td>
 
