@@ -120,29 +120,29 @@ public class ColegiadoController {
     }
 
     @PostMapping("/atribuir")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public ModelAndView atribuirProfessorNoColegiado(@RequestParam Integer idProfessor,
                                          @RequestParam Integer idColegiado, ModelAndView modelAndView, BindingResult bindingResult, RedirectAttributes attr){
 
         //new ProcessoDTO(processoService.atribuirProcesso(idProcesso, idProfessor));
         //modelAndView.setViewName("redirect:/professores");
 
-        ModelAndView mv = new ModelAndView("redirect:/professores");
 
 
         try {
             colegiadoService.adicionarProfessor(idColegiado, idProfessor);
             attr.addFlashAttribute("message", "OK: Colegiado atribuído com sucesso!");
             attr.addFlashAttribute("error", "false");
+            modelAndView.setViewName("redirect:/professores");
         } catch (RuntimeException e) {
             e.printStackTrace();
             attr.addFlashAttribute("message", "Error: " + e.getMessage());
             attr.addFlashAttribute("error", "true");
+            modelAndView.setViewName("redirect:/professores");
         }
 
+        modelAndView.setViewName("redirect:/professores");
 
-        return mv;
+        return modelAndView;
     }
 
 //    @PostMapping

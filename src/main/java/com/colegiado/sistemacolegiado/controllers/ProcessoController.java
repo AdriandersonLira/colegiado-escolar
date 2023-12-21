@@ -68,8 +68,6 @@ public class ProcessoController {
     }
 
     @PostMapping("/atribuir")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public ModelAndView atribuirProcesso(@RequestParam Integer idProfessor,
                                          @RequestParam Integer idProcesso, ModelAndView modelAndView, BindingResult bindingResult, RedirectAttributes attr){
 
@@ -78,7 +76,7 @@ public class ProcessoController {
         if(!colegiadoService.temcolegiado(idProfessor)){
             attr.addFlashAttribute("message", "Error: Professor não faz parte do colegiado!");
             attr.addFlashAttribute("error", "true");
-            modelAndView.setViewName("redirect:/processos");
+            modelAndView.setViewName("redirect:/professores");
             return modelAndView;
         }
 
@@ -90,10 +88,10 @@ public class ProcessoController {
             e.printStackTrace();
             attr.addFlashAttribute("message", "Error: " + e.getMessage());
             attr.addFlashAttribute("error", "true");
-            modelAndView.setViewName("redirect:/processos");
+            modelAndView.setViewName("redirect:/professores");
         }
 
-        modelAndView.setViewName("redirect:/processos");
+        modelAndView.setViewName("redirect:/professores");
         return modelAndView;
     }
 

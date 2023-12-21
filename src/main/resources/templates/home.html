@@ -11,15 +11,23 @@
     <div class="container mt-4">
         <div class="list-group">
             <button type="button" class="list-group-item list-group-item-action"
-                    th:onclick="'window.location.href=\'/alunos\''">Alunos</button>
+                    th:onclick="'window.location.href=\'/alunos\''"
+                    sec:authorize="hasAnyRole('ADMIN')"
+            >Alunos</button>
             <button type="button" class="list-group-item list-group-item-action"
-                    th:onclick="'window.location.href=\'/assuntos\''">Assuntos</button>
+                    th:onclick="'window.location.href=\'/assuntos\''"
+                    sec:authorize="hasAnyRole('ADMIN')"
+            >Assuntos</button>
             <button type="button" class="list-group-item list-group-item-action"
-                    th:onclick="'window.location.href=\'/colegiados\''">Colegiados</button>
+                    th:onclick="'window.location.href=\'/colegiados\''"
+                    sec:authorize="hasAnyRole('PROFESSOR', 'ADMIN', 'COORDENADOR')"
+            >Colegiados</button>
             <button type="button" class="list-group-item list-group-item-action"
                     th:onclick="'window.location.href=\'/processos\''">Processos</button>
             <button type="button" class="list-group-item list-group-item-action"
-                    th:onclick="'window.location.href=\'/professores\''">Professores</button>
+                    th:onclick="'window.location.href=\'/professores\''"
+                    sec:authorize="hasAnyRole('PROFESSOR', 'ADMIN', 'COORDENADOR')"
+            >Professores</button>
         </div>
     </div>
 </main>
