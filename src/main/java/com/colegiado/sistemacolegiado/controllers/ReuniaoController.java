@@ -13,6 +13,7 @@ import com.colegiado.sistemacolegiado.services.ReuniaoService;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -40,6 +42,7 @@ public class ReuniaoController {
     public ModelAndView criarReuniao(
             @RequestParam Integer idColegiadoReuniao,
             @RequestParam Integer[] idProcessoReuniao,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReuniao,
             RedirectAttributes attr
     ) {
         Colegiado colegiado = colegiadoService.encontrarPorId(idColegiadoReuniao);
@@ -72,7 +75,7 @@ public class ReuniaoController {
         }
 
         try {
-            Reuniao reuniao = new Reuniao(colegiado, processos, StatusReuniao.PROGRAMADA);
+            Reuniao reuniao = new Reuniao(colegiado, processos, StatusReuniao.PROGRAMADA, dataReuniao);
             reuniaoService.criarReuniao(reuniao, processos);
             attr.addFlashAttribute("message", "Reunião criada com sucesso!");
         } catch (RuntimeException e) {
@@ -198,9 +201,9 @@ public class ReuniaoController {
     }*/
 
     @PostMapping("/reuniao/encerrar")
-    public ModelAndView encerrarReuniao(Integer idReuniao){
+    public ModelAndView encerrarReuniao(@RequestParam("idReuniao")Integer idReuniao){
         reuniaoService.encerrarReuniao(idReuniao);
-        return null;
+        return new ModelAndView("redirect:/reunioes");
     }
 
     @PostMapping("/contarvotos")

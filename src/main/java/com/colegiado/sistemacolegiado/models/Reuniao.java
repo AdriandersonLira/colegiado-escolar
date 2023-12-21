@@ -38,11 +38,11 @@ public class Reuniao {
     @OneToMany(mappedBy = "reuniao", cascade = CascadeType.ALL)
     private List<Voto> votos;
 
-    public Reuniao (Colegiado colegiado, List<Processo> processosPassados, StatusReuniao statuscriacao){
+    public Reuniao (Colegiado colegiado, List<Processo> processosPassados, StatusReuniao statuscriacao, LocalDate dataInicioReuniao ){
         this.colegiado = colegiado;
         this.processos = processosPassados;
         this.status = statuscriacao;
-        this.dataReuniao = LocalDate.now();
+        this.dataReuniao = dataInicioReuniao;
     }
 
     public String toString() {
